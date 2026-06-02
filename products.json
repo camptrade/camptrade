@@ -2,13 +2,34 @@
   "satis": [
     {
       "id": 1,
-      "ad": "Nümunə Məhsul - Sil Bunu",
+      "ad": "qazan dəsti",
       "qiymet": 50,
       "veziyyet": "Yeni",
-      "melumat": "Bu nümunə məhsuldur, silə bilərsən",
-      "whatsapp": "994501234567",
+      "melumat": "qazan dəsti",
+      "whatsapp": "994554410372",
       "sekil": "images/products/qazan_desti.png"
-    }
+    } ,
+    {
+      "id": 2,
+      "ad": "Su qabı",
+      "qiymet": 10,
+      "veziyyet": "Yeni",
+      "melumat": "Su qabı 30 litr",
+      "whatsapp": "994554410372",
+      "sekil": "images/products/su_qabi.png"
+    } ,
+
+    {
+      "id": 3,
+      "ad": "stekan",
+      "qiymet": 15,
+      "veziyyet": "Yeni",
+      "melumat": "stekan",
+      "whatsapp": "994554410372",
+      "sekil": "images/products/stekan.png"
+    } 
+
+
   ],
   "kiraye": [
     {
