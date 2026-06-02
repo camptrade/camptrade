@@ -1,9 +1,23 @@
 {
-  "id": 2,
-  "ad": "Qazan desti",
-  "qiymet": 50,
-  "veziyyet": "Əla",
-  "melumat": "qazan",
-  "whatsapp": "994501234567",
-  "sekil": "images/products/qazan desti.png"
+  "satis": [
+    {
+      "id": 1,
+      "ad": "Nümunə Məhsul - Sil Bunu",
+      "qiymet": 50,
+      "veziyyet": "Yeni",
+      "melumat": "Bu nümunə məhsuldur, silə bilərsən",
+      "whatsapp": "994501234567",
+      "sekil": "images/products/default.jpg"
+    }
+  ],
+  "kiraye": [
+    {
+      "id": 1,
+      "ad": "Nümunə Kirayə - Sil Bunu",
+      "qiymet": 10,
+      "melumat": "Gündəlik kirayə qiyməti",
+      "whatsapp": "994501234567",
+      "sekil": "images/products/default.jpg"
+    }
+  ]
 }
