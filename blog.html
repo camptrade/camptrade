@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampTrade - Blog</title>
+    <link rel="stylesheet" href="css/shared.css">
+    <style>
+        .page-hero {
+            background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero svg { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0.07; pointer-events:none; }
+        .page-hero-content { position: relative; z-index: 2; }
+        .page-hero h1 { font-size: 36px; margin-bottom: 10px; }
+        .page-hero p { opacity: 0.8; font-size: 16px; }
+
+        .filter-bar {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .filter-btn {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            color: #555;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #2d5a1b;
+            border-color: #2d5a1b;
+            color: white;
+        }
+
+        .blog-container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 40px;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .blog-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+        .blog-img {
+            width: 100%;
+            height: 190px;
+            background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 65px;
+        }
+
+        .blog-info { padding: 22px; }
+
+        .blog-tag {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2d5a1b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .blog-info h3 { font-size: 17px; color: #222; margin-bottom: 10px; line-height: 1.5; }
+        .blog-info p { font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 15px; }
+
+        .blog-meta { display: flex; gap: 15px; font-size: 12px; color: #aaa; margin-bottom: 15px; }
+
+        .read-more {
+            display: inline-block;
+            color: #2d5a1b;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            border-bottom: 2px solid #f5a623;
+            padding-bottom: 2px;
+            transition: color 0.3s;
+        }
+
+        .read-more:hover { color: #f5a623; }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">
+        <img src="images/logo.jpeg" alt="CampTrade Logo">
+    </a>
+    <nav>
+        <a href="index.html">Ana Səhifə</a>
+        <a href="satis.html">Satılıq</a>
+        <a href="kiraye.html">Kirayə</a>
+        <a href="sat.html">Məhsul Sat</a>
+        <a href="blog.html">Blog</a>
+        <a href="elaqe.html">Əlaqə</a>
+    </nav>
+    <div class="lang-switcher">
+        <button class="lang-btn active">🇦🇿</button>
+        <button class="lang-btn">🇬🇧</button>
+        <button class="lang-btn">🇷🇺</button>
+    </div>
+</header>
+
+<div class="page-hero">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice">
+        <polygon points="-50,300 150,100 300,200 500,30 700,160 900,20 1100,180 1300,70 1490,130 1490,300" fill="white"/>
+    </svg>
+    <div class="page-hero-content">
+        <h1>📰 Blog</h1>
+        <p>Outdoor dünyasından məlumatlar, tövsiyələr və təcrübələr</p>
+    </div>
+</div>
+
+<div class="filter-bar">
+    <button class="filter-btn active" onclick="filterPosts('all', this)">🌿 Hamısı</button>
+    <button class="filter-btn" onclick="filterPosts('baslangic', this)">🔰 Başlanğıc</button>
+    <button class="filter-btn" onclick="filterPosts('avadanliq', this)">🎒 Avadanlıq</button>
+    <button class="filter-btn" onclick="filterPosts('azerbaycan', this)">🇦🇿 Azərbaycan</button>
+    <button class="filter-btn" onclick="filterPosts('tecrube', this)">🏔️ Təcrübə</button>
+</div>
+
+<div class="blog-container">
+    <div class="blog-grid" id="blogGrid">
+
+        <div class="blog-card" data-category="baslangic">
+            <div class="blog-img">🏕️</div>
+            <div class="blog-info">
+                <span class="blog-tag">Başlanğıc</span>
+                <h3>Kempinqə İlk Dəfə Gedənlər Üçün 10 Tövsiyə</h3>
+                <p>İlk kempinq səfərinizə çıxmazdan əvvəl bilməli olduğunuz ən vacib məlumatlar.</p>
+                <div class="blog-meta">
+                    <span>📅 1 İyun 2026</span>
+                    <span>⏱️ 5 dəq oxu</span>
+                </div>
+                <a href="#" class="read-more">Davam et →</a>
+            </div>
+        </div>
+
+        <div class="blog-card" data-category="avadanliq">
+            <div class="blog-img">🎒</div>
+            <div class="blog-info">
+                <span class="blog-tag">Avadanlıq</span>
+                <h3>Ən Yaxşı Kempinq Çantası Necə Seçilir?</h3>
+                <p>Çanta seçərkən nəyə diqqət etmək lazımdır? Həcm, çəki, material müqayisəsi.</p>
+                <div class="blog-meta">
+                    <span>📅 28 May 2026</span>
+                    <span>⏱️ 7 dəq oxu</span>
+                </div>
+                <a href="#" class="read-more">Davam et →</a>
+            </div>
+        </div>
+
+        <div class="blog-card" data-category="azerbaycan">
+            <div class="blog-img">🏔️</div>
+            <div class="blog-info">
+                <span class="blog-tag">Azərbaycan</span>
+                <h3>Azərbaycanda Ən Gözəl 5 Kempinq Yeri</h3>
+                <p>Şahdağdan Qobustana — ölkəmizdəki ən möhtəşəm outdoor məkanları.</p>
+                <div class="blog-meta">
+                    <span>📅 25 May 2026</span>
+                    <span>⏱️ 6 dəq oxu</span>
+                </div>
+                <a href="#" class="read-more">Davam et →</a>
+            </div>
+        </div>
+
+        <div class="blog-card" data-category="avadanliq">
+            <div class="blog-img">🔦</div>
+            <div class="blog-info">
+                <span class="blog-tag">Avadanlıq</span>
+                <h3>Kempinqdə Mütləq Lazım Olan 15 Əşya</h3>
+                <p>Heç bir kempinqdə unutmamalı olduğunuz əsas avadanlıqların tam siyahısı.</p>
+                <div class="blog-meta">
+                    <span>📅 20 May 2026</span>
+                    <span>⏱️ 4 dəq oxu</span>
+                </div>
+                <a href="#" class="read-more">Davam et →</a>
+            </div>
+        </div>
+
+        <div class="blog-card" data-category="tecrube">
+            <div class="blog-img">🌄</div>
+            <div class="blog-info">
+                <span class="blog-tag">Təcrübə</span>
+                <h3>Qışda Kempinq: Bilməli Olduğunuz Hər Şey</h3>
+                <p>Soyuq havada kempinq etmək istəyənlər üçün təhlükəsizlik qaydaları.</p>
+                <div class="blog-meta">
+                    <span>📅 15 May 2026</span>
+                    <span>⏱️ 8 dəq oxu</span>
+                </div>
+                <a href="#" class="read-more">Davam et →</a>
+            </div>
+        </div>
+
+        <div class="blog-card" data-category="baslangic">
+            <div class="blog-img">🍳</div>
+            <div class="blog-info">
+                <span class="blog-tag">Başlanğıc</span>
+                <h3>Kempinqdə Asan və Dadlı Yeməklər</h3>
+                <p>Çöldə bişirilə bilən ən asan 10 yemək resepti — minimal avadanlıqla maksimal ləzzət.</p>
+                <div class="blog-meta">
+                    <span>📅 10 May 2026</span>
+                    <span>⏱️ 5 dəq oxu</span>
+                </div>
+                <a href="#" class="read-more">Davam et →</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <div class="footer-logo">
+        <img src="images/logo.jpeg" alt="CampTrade">
+    </div>
+    <div class="social-links">
+        <a href="https://facebook.com/LINKINI_YAZ" target="_blank">📘 Facebook</a>
+        <a href="https://instagram.com/LINKINI_YAZ" target="_blank">📸 Instagram</a>
+        <a href="https://wa.me/994NOMERINIYAZ" target="_blank">💬 WhatsApp</a>
+        <a href="https://tiktok.com/@LINKINI_YAZ" target="_blank">📱 TikTok</a>
+    </div>
+    <p>© 2026 CampTrade. All rights reserved.</p>
+</footer>
+
+<script>
+    function filterPosts(category, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.blog-card').forEach(card => {
+            if (category === 'all' || card.dataset.category === category) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
