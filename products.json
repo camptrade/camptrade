@@ -21,3 +21,12 @@
     }
   ]
 }
+{
+  "id": 2,
+  "ad": "Qazan desti",
+  "qiymet": 50,
+  "veziyyet": "Əla",
+  "melumat": "qazan",
+  "whatsapp": "994501234567",
+  "sekil": "images/products/qazan desti.png"
+}
