@@ -1,0 +1,32 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/products"
+public_folder: "/images/products"
+
+collections:
+  - name: "satis"
+    label: "Satılıq Məhsullar"
+    folder: "_products/satis"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Məhsul Adı", name: "title", widget: "string" }
+      - { label: "Qiymət (AZN)", name: "price", widget: "number" }
+      - { label: "Şəkil", name: "image", widget: "image" }
+      - { label: "Məlumat", name: "description", widget: "text" }
+      - { label: "Vəziyyət", name: "condition", widget: "select", options: ["Yeni", "İşlənmiş - Əla", "İşlənmiş - Yaxşı"] }
+      - { label: "Əlaqə (WhatsApp nömrə)", name: "contact", widget: "string" }
+
+  - name: "kiraye"
+    label: "Kirayə Məhsullar"
+    folder: "_products/kiraye"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Məhsul Adı", name: "title", widget: "string" }
+      - { label: "Günlük Qiymət (AZN)", name: "price", widget: "number" }
+      - { label: "Şəkil", name: "image", widget: "image" }
+      - { label: "Məlumat", name: "description", widget: "text" }
+      - { label: "Əlaqə (WhatsApp nömrə)", name: "contact", widget: "string" }
