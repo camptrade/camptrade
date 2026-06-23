@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampTrade Admin Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f0; }
+
+        /* LOGIN */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .login-box img {
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .login-box h2 {
+            color: #2d5a1b;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+
+        .login-box p {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .login-box input:focus { border-color: #2d5a1b; }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #2d5a1b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover { background: #f5a623; }
+
+        .error-msg {
+            color: red;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ADMIN PANEL */
+        .admin-panel { display: none; }
+
+        .admin-header {
+            background: #2d5a1b;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header img {
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-header h1 { font-size: 20px; }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover { background: #f5a623; }
+
+        .admin-content {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 25px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #2d5a1b;
+            border-color: #2d5a1b;
+            color: white;
+        }
+
+        /* FORM */
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .form-card h2 {
+            color: #2d5a1b;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus { border-color: #2d5a1b; }
+
+        .form-group textarea { height: 100px; resize: vertical; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* PHOTO UPLOAD */
+        .photo-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .photo-upload-area:hover { border-color: #2d5a1b; background: #f9fff9; }
+
+        .photo-upload-area input[type="file"] {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+
+        .photo-upload-area .upload-icon { font-size: 40px; margin-bottom: 10px; }
+        .photo-upload-area p { color: #888; font-size: 14px; }
+        .photo-upload-area .or-text { margin: 10px 0; color: #aaa; font-size: 13px; }
+
+        .photo-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .url-input { margin-top: 10px; }
+
+        /* SUBMIT */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #f5a623;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover { background: #e09515; transform: translateY(-2px); }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+        /* SUCCESS MESSAGE */
+        .success-msg {
+            background: #e8f5e9;
+            border: 2px solid #2d5a1b;
+            color: #2d5a1b;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* PRODUCTS LIST */
+        .products-list { margin-top: 10px; }
+
+        .product-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .product-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #eee;
+        }
+
+        .product-item-info { flex: 1; }
+        .product-item-info h3 { font-size: 16px; color: #222; margin-bottom: 4px; }
+        .product-item-info p { font-size: 13px; color: #888; }
+        .product-item-price { font-size: 18px; font-weight: 700; color: #f5a623; }
+
+        .delete-btn {
+            background: #ffe5e5;
+            color: #e53e3e;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover { background: #e53e3e; color: white; }
+
+        .empty-list {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 15px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 15px;
+            color: #888;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+            .admin-content { padding: 0 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-box">
+        <img src="images/logo.jpeg" alt="CampTrade">
+        <h2>Admin Panel</h2>
+        <p>CampTrade idarəetmə sistemi</p>
+        <input type="password" id="passwordInput" placeholder="Şifrəni daxil et" onkeypress="if(event.key==='Enter') login()">
+        <button class="login-btn" onclick="login()">Daxil Ol</button>
+        <p class="error-msg" id="errorMsg">❌ Şifrə səhvdir!</p>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+
+    <div class="admin-header">
+        <div style="display:flex; align-items:center; gap:15px">
+            <img src="images/logo.jpeg" alt="CampTrade">
+            <h1>CampTrade Admin Panel</h1>
+        </div>
+        <button class="logout-btn" onclick="logout()">🚪 Çıxış</button>
+    </div>
+
+    <div class="admin-content">
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('addProduct')">➕ Məhsul Əlavə Et</button>
+            <button class="tab-btn" onclick="showTab('satisList')">🛒 Satılıq Məhsullar</button>
+            <button class="tab-btn" onclick="showTab('kirayeList')">⛺ Kirayə Məhsullar</button>
+        </div>
+
+        <!-- ADD PRODUCT FORM -->
+        <div id="addProduct">
+            <div class="form-card">
+                <h2>➕ Yeni Məhsul Əlavə Et</h2>
+
+                <div class="form-group">
+                    <label>📦 Kateqoriya</label>
+                    <select id="category">
+                        <option value="satis">🛒 Satılıq</option>
+                        <option value="kiraye">⛺ Kirayə</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📝 Məhsul Adı</label>
+                    <input type="text" id="productName" placeholder="Məs: Coleman 4 Nəfərlik Çadır">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>💰 Qiymət (AZN)</label>
+                        <input type="number" id="productPrice" placeholder="Məs: 150">
+                    </div>
+                    <div class="form-group" id="conditionGroup">
+                        <label>✅ Vəziyyət</label>
+                        <select id="productCondition">
+                            <option value="Yeni">🟢 Yeni</option>
+                            <option value="İşlənmiş - Əla">🟡 İşlənmiş - Əla</option>
+                            <option value="İşlənmiş - Yaxşı">🟠 İşlənmiş - Yaxşı</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>📋 Məhsul Haqqında</label>
+                    <textarea id="productDesc" placeholder="Məhsul haqqında ətraflı məlumat yazın..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>📱 WhatsApp Nömrə</label>
+                    <input type="text" id="productWhatsapp" placeholder="Məs: 994501234567">
+                </div>
+
+                <div class="form-group">
+                    <label>📷 Məhsul Şəkli</label>
+                    <div class="photo-upload-area" id="uploadArea">
+                        <input type="file" id="photoFile" accept="image/*" onchange="previewPhoto(this)">
+                        <div class="upload-icon">📸</div>
+                        <p>Şəkil yükləmək üçün bura bas və ya sürüklə</p>
+                        <p class="or-text">— və ya —</p>
+                        <p style="font-size:13px; color:#aaa">Aşağıya şəkil linki yapışdır</p>
+                    </div>
+                    <img id="photoPreview" class="photo-preview" alt="Önizləmə">
+                    <div class="url-input">
+                        <input type="text" id="photoUrl" placeholder="Şəkil linki (Instagram, WhatsApp və s.)" oninput="previewUrl(this)">
+                    </div>
+                </div>
+
+                <button class="submit-btn" id="submitBtn" onclick="addProduct()">
+                    ✅ Məhsulu Əlavə Et
+                </button>
+
+                <div class="loading-spinner" id="loadingSpinner">
+                    ⏳ Şəkil yüklənir, zəhmət olmasa gözləyin...
+                </div>
+
+                <div class="success-msg" id="successMsg">
+                    🎉 Məhsul uğurla əlavə edildi! Saytda görünəcək.
+                </div>
+            </div>
+        </div>
+
+        <!-- SATIŞ SİYAHISI -->
+        <div id="satisList" style="display:none">
+            <div class="form-card">
+                <h2>🛒 Satılıq Məhsullar</h2>
+                <div class="products-list" id="satisListContent"></div>
+            </div>
+        </div>
+
+        <!-- KİRAYƏ SİYAHISI -->
+        <div id="kirayeList" style="display:none">
+            <div class="form-card">
+                <h2>⛺ Kirayə Məhsullar</h2>
+                <div class="products-list" id="kirayeListContent"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // ŞİFRƏNİ BURDA DƏYİŞ
+    const ADMIN_PASSWORD = "camptrade2026";
+
+    // IMGbb API
+    const IMGBB_KEY = "1a08b81b0667fea48665bf27e5b35541";
+
+    // LOGIN
+    function login() {
+        const pass = document.getElementById('passwordInput').value;
+        if (pass === ADMIN_PASSWORD) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            loadAllProducts();
+        } else {
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+    }
+
+    function logout() {
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+    }
+
+    // TABS
+    function showTab(tab) {
+        document.getElementById('addProduct').style.display = 'none';
+        document.getElementById('satisList').style.display = 'none';
+        document.getElementById('kirayeList').style.display = 'none';
+        document.getElementById(tab).style.display = 'block';
+
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+
+        if (tab === 'satisList') loadProductsList('satis');
+        if (tab === 'kirayeList') loadProductsList('kiraye');
+    }
+
+    // PHOTO PREVIEW
+    function previewPhoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const preview = document.getElementById('photoPreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.getElementById('photoUrl').value = '';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function previewUrl(input) {
+        if (input.value) {
+            const preview = document.getElementById('photoPreview');
+            preview.src = input.value;
+            preview.style.display = 'block';
+            document.getElementById('photoFile').value = '';
+        }
+    }
+
+    // MƏHSUL ƏLAVƏ ET
+    async function addProduct() {
+        const name = document.getElementById('productName').value.trim();
+        const price = document.getElementById('productPrice').value;
+        const desc = document.getElementById('productDesc').value.trim();
+        const whatsapp = document.getElementById('productWhatsapp').value.trim();
+        const category = document.getElementById('category').value;
+        const condition = document.getElementById('productCondition').value;
+        const photoFile = document.getElementById('photoFile').files[0];
+        const photoUrl = document.getElementById('photoUrl').value.trim();
+
+        if (!name || !price || !desc || !whatsapp) {
+            alert('❌ Zəhmət olmasa bütün sahələri doldurun!');
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('loadingSpinner');
+        const successMsg = document.getElementById('successMsg');
+
+        submitBtn.disabled = true;
+        spinner.style.display = 'block';
+        successMsg.style.display = 'none';
+
+        let finalImageUrl = 'images/logo.jpeg';
+
+        try {
+            if (photoFile) {
+                // Şəkili ImgBB-yə yüklə
+                const formData = new FormData();
+                formData.append('image', photoFile);
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    finalImageUrl = data.data.url;
+                }
+            } else if (photoUrl) {
+                finalImageUrl = photoUrl;
+            }
+
+            // Mövcud məhsulları oxu
+            const existing = JSON.parse(localStorage.getItem('products') || '{"satis":[],"kiraye":[]}');
+
+            // Yeni məhsul
+            const newProduct = {
+                id: Date.now(),
+                ad: name,
+                qiymet: parseFloat(price),
+                melumat: desc,
+                whatsapp: whatsapp,
+                sekil: finalImageUrl,
+                tarix: new Date().toLocaleDateString('az-AZ')
+            };
+
+            if (category === 'satis') {
+                newProduct.veziyyet = condition;
+            }
+
+            existing[category].push(newProduct);
+            localStorage.setItem('products', JSON.stringify(existing));
+
+            // Formu təmizlə
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productDesc').value = '';
+            document.getElementById('photoFile').value = '';
+            document.getElementById('photoUrl').value = '';
+            document.getElementById('photoPreview').style.display = 'none';
+
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            successMsg.style.display = 'block';
+            setTimeout(() => successMsg.style.display = 'none', 4000);
+
+        } catch(e) {
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            alert('❌ Xəta baş verdi, yenidən cəhd edin');
+        }
+    }
+
+    // MƏHSUL SİYAHISI
+    function loadProductsList(category) {
+        const data = JSON.parse(localStorage.getItem('products') || '{"satis":[],"kiraye":[]}');
+        const container = document.getElementById(category + 'ListContent');
+        const items = data[category];
+
+        if (!items || items.length === 0) {
+            container.innerHTML = '<div class="empty-list">📭 Hələ məhsul əlavə edilməyib</div>';
+            return;
+        }
+
+        container.innerHTML = items.map(p => `
+            <div class="product-item">
+                <img src="${p.sekil}" alt="${p.ad}" onerror="this.src='images/logo.jpeg'">
+                <div class="product-item-info">
+                    <h3>${p.ad}</h3>
+                    <p>${p.melumat.substring(0, 60)}...</p>
+                    ${p.veziyyet ? `<p>✅ ${p.veziyyet}</p>` : ''}
+                </div>
+                <div class="product-item-price">${p.qiymet} AZN</div>
+                <button class="delete-btn" onclick="deleteProduct('${category}', ${p.id})">🗑️ Sil</button>
+            </div>
+        `).join('');
+    }
+
+    function loadAllProducts() {
+        loadProductsList('satis');
+        loadProductsList('kiraye');
+    }
+
+    // MƏHSUL SİL
+    function deleteProduct(category, id) {
+        if (!confirm('Bu məhsulu silmək istəyirsiniz?')) return;
+        const data = JSON.parse(localStorage.getItem('products') || '{"satis":[],"kiraye":[]}');
+        data[category] = data[category].filter(p => p.id !== id);
+        localStorage.setItem('products', JSON.stringify(data));
+        loadProductsList(category);
+    }
+
+    // KATEQORİYA DƏYİŞƏNDƏ
+    document.getElementById('category').addEventListener('change', function() {
+        document.getElementById('conditionGroup').style.display = 
+            this.value === 'satis' ? 'block' : 'none';
+    });
+</script>
+
+</body>
+</html>

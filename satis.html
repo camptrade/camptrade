@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampTrade - Kirayə Məhsullar</title>
+    <title>CampTrade - Satılıq Məhsullar</title>
     <link rel="stylesheet" href="css/shared.css">
     <style>
         .page-hero {
@@ -24,6 +24,7 @@
         .empty-state { text-align: center; padding: 80px 20px; color: #888; }
         .empty-state .icon { font-size: 80px; margin-bottom: 20px; }
         .empty-state h3 { font-size: 24px; color: #555; margin-bottom: 10px; }
+        .empty-state p { font-size: 16px; }
 
         .products-grid {
             display: grid;
@@ -43,8 +44,17 @@
         .product-info { padding: 20px; }
         .product-info h3 { font-size: 18px; color: #2d5a1b; margin-bottom: 8px; }
         .product-price { font-size: 24px; font-weight: 700; color: #f5a623; margin-bottom: 8px; }
-        .price-label { font-size: 13px; color: #888; font-weight: normal; }
         .product-desc { font-size: 14px; color: #666; margin-bottom: 12px; line-height: 1.6; }
+        .product-condition {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2d5a1b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
         .contact-btn {
             display: block;
             background: #25D366;
@@ -88,8 +98,8 @@
         <polygon points="-50,300 150,100 300,200 500,30 700,160 900,20 1100,180 1300,70 1490,130 1490,300" fill="white"/>
     </svg>
     <div class="page-hero-content">
-        <h1>⛺ Kirayə Məhsullar</h1>
-        <p>Çadır, sleeping bag və digər avadanlıqlar</p>
+        <h1>🛒 Satılıq Məhsullar</h1>
+        <p>Outdoor avadanlıqları - yeni və ikinci əl</p>
     </div>
 </div>
 
@@ -97,9 +107,9 @@
     <div class="loading" id="loading">⏳ Məhsullar yüklənir...</div>
     <div class="products-grid" id="productsGrid" style="display:none"></div>
     <div class="empty-state" id="emptyState" style="display:none">
-        <div class="icon">🎒</div>
-        <h3>Tezliklə kirayə məhsullar əlavə olunacaq!</h3>
-        <p>Hal-hazırda kirayə məhsul yoxdur.</p>
+        <div class="icon">🏕️</div>
+        <h3>Tezliklə məhsullar əlavə olunacaq!</h3>
+        <p>Hal-hazırda satılıq məhsul yoxdur.</p>
     </div>
 </div>
 
@@ -117,43 +127,35 @@
 </footer>
 
 <script>
-fetch('products.json')
-    .then(res => res.json())
-    .then(data => {
-        const loading = document.getElementById('loading');
-        const grid = document.getElementById('productsGrid');
-        const empty = document.getElementById('emptyState');
+const data = JSON.parse(localStorage.getItem('products') || '{"satis":[],"kiraye":[]}');
+const loading = document.getElementById('loading');
+const grid = document.getElementById('productsGrid');
+const empty = document.getElementById('emptyState');
 
-        loading.style.display = 'none';
+loading.style.display = 'none';
+const mehsullar = data.satis;
 
-        const mehsullar = data.kiraye;
-
-        if (!mehsullar || mehsullar.length === 0) {
-            empty.style.display = 'block';
-            return;
-        }
-
-        grid.style.display = 'grid';
-        mehsullar.forEach(m => {
-            grid.innerHTML += `
-                <div class="product-card">
-                    <img src="${m.sekil}" alt="${m.ad}" onerror="this.src='images/logo.jpeg'">
-                    <div class="product-info">
-                        <h3>${m.ad}</h3>
-                        <div class="product-price">${m.qiymet} AZN <span class="price-label">/ gün</span></div>
-                        <p class="product-desc">${m.melumat}</p>
-                        <a href="https://wa.me/${m.whatsapp}" class="contact-btn" target="_blank">
-                            💬 WhatsApp ilə Əlaqə
-                        </a>
-                    </div>
+if (!mehsullar || mehsullar.length === 0) {
+    empty.style.display = 'block';
+} else {
+    grid.style.display = 'grid';
+    mehsullar.forEach(m => {
+        grid.innerHTML += `
+            <div class="product-card">
+                <img src="${m.sekil}" alt="${m.ad}" onerror="this.src='images/logo.jpeg'">
+                <div class="product-info">
+                    <h3>${m.ad}</h3>
+                    <div class="product-price">${m.qiymet} AZN</div>
+                    <span class="product-condition">${m.veziyyet || 'Yeni'}</span>
+                    <p class="product-desc">${m.melumat}</p>
+                    <a href="https://wa.me/${m.whatsapp}" class="contact-btn" target="_blank">
+                        💬 WhatsApp ilə Əlaqə
+                    </a>
                 </div>
-            `;
-        });
-    })
-    .catch(() => {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('emptyState').style.display = 'block';
+            </div>
+        `;
     });
+}
 </script>
 
 </body>
