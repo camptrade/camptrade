@@ -37,6 +37,7 @@
             margin-left: 25px;
             font-size: 15px;
             transition: color 0.3s;
+            white-space: nowrap;
         }
 
         nav a:hover { color: #f5a623; }
@@ -266,6 +267,85 @@
 
         .social-links a:hover { background: #f5a623; }
         footer p { opacity: 0.6; font-size: 13px; margin-top: 15px; }
+
+        @media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        padding: 12px 15px;
+        gap: 8px;
+    }
+
+    nav {
+        order: 3;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    nav a {
+        margin-left: 0 !important;
+        font-size: 13px;
+        padding: 5px 12px;
+        background: #f5f5f5;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .lang-switcher {
+        order: 2;
+        margin-left: auto;
+    }
+
+    .logo img {
+        height: 45px;
+        width: 45px;
+    }
+
+    .hero { padding: 50px 15px; }
+    .hero h1 { font-size: 26px; }
+    .hero p { font-size: 15px; }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn { width: 200px; text-align: center; }
+
+    .categories { padding: 40px 15px; }
+
+    .cat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .cat-card { padding: 20px 12px; }
+    .cat-icon { font-size: 35px; }
+    .cat-card h3 { font-size: 16px; }
+
+    .how-it-works { padding: 40px 15px; }
+
+    .steps { grid-template-columns: 1fr 1fr; }
+
+    .blog-section { padding: 40px 15px; }
+    .blog-grid { grid-template-columns: 1fr; }
+
+    footer { padding: 30px 15px; }
+
+    .social-links { gap: 8px; }
+    .social-links a { font-size: 12px; padding: 6px 10px; }
+}
+
+@media (max-width: 480px) {
+    .cat-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 22px; }
+}
     </style>
 </head>
 <body>
