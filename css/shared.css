@@ -85,3 +85,143 @@ footer {
 
 .social-links a:hover { background: #f5a623; }
 footer p { opacity: 0.6; font-size: 13px; margin-top: 15px; }
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        padding: 12px 20px;
+        gap: 10px;
+    }
+
+    nav {
+        order: 3;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    nav a {
+        margin-left: 0;
+        font-size: 13px;
+        padding: 5px 10px;
+        background: #f5f5f5;
+        border-radius: 20px;
+    }
+
+    .lang-switcher {
+        order: 2;
+    }
+
+    .logo img {
+        height: 45px;
+        width: 45px;
+    }
+
+    .hero h1 {
+        font-size: 28px !important;
+    }
+
+    .hero p {
+        font-size: 16px !important;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .categories {
+        padding: 40px 20px;
+    }
+
+    .cat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .cat-card {
+        padding: 20px 15px;
+    }
+
+    .cat-icon {
+        font-size: 35px;
+    }
+
+    .how-it-works {
+        padding: 40px 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .blog-section {
+        padding: 40px 20px;
+    }
+
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .products-section {
+        padding: 30px 20px;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .page-hero {
+        padding: 35px 20px !important;
+    }
+
+    .page-hero h1 {
+        font-size: 26px !important;
+    }
+
+    footer {
+        padding: 30px 20px;
+    }
+
+    .social-links {
+        gap: 10px;
+    }
+
+    .social-links a {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .sell-section {
+        padding: 0 15px;
+    }
+
+    .contact-section {
+        grid-template-columns: 1fr;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 24px !important;
+    }
+}
