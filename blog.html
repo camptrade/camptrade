@@ -72,12 +72,19 @@
 
         .blog-img {
             width: 100%;
-            height: 190px;
+            height: 200px;
+            object-fit: cover;
             background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 65px;
+        }
+
+        .blog-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .blog-info { padding: 22px; }
@@ -94,8 +101,6 @@
         }
 
         .blog-info h3 { font-size: 17px; color: #222; margin-bottom: 10px; line-height: 1.5; }
-        .blog-info p { font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 15px; }
-
         .blog-meta { display: flex; gap: 15px; font-size: 12px; color: #aaa; margin-bottom: 15px; }
 
         .read-more {
@@ -106,10 +111,79 @@
             text-decoration: none;
             border-bottom: 2px solid #f5a623;
             padding-bottom: 2px;
-            transition: color 0.3s;
         }
 
-        .read-more:hover { color: #f5a623; }
+        .loading { text-align: center; padding: 60px; font-size: 18px; color: #888; }
+        .empty-state { text-align: center; padding: 60px; color: #888; }
+        .empty-state .icon { font-size: 60px; margin-bottom: 15px; }
+
+        /* BLOG POST POPUP */
+        .post-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .post-box {
+            max-width: 750px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .post-close {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .post-cover {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .post-cover-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .post-content { padding: 30px; }
+        .post-content h1 { font-size: 26px; color: #2d5a1b; margin-bottom: 12px; line-height: 1.4; }
+        .post-meta { display: flex; gap: 15px; font-size: 13px; color: #aaa; margin-bottom: 25px; flex-wrap: wrap; }
+
+        .post-body { font-size: 16px; color: #444; line-height: 1.9; }
+        .post-body h2 { font-size: 20px; color: #2d5a1b; margin: 25px 0 12px; }
+        .post-body p { margin-bottom: 15px; }
+        .post-body ul { margin: 10px 0 15px 20px; }
+        .post-body ul li { margin-bottom: 8px; }
+
+        @media (max-width: 768px) {
+            .blog-container { padding: 0 15px; }
+            .blog-grid { grid-template-columns: 1fr; }
+            .filter-bar { padding: 15px; }
+            .post-content { padding: 20px; }
+            .post-content h1 { font-size: 22px; }
+        }
     </style>
 </head>
 <body>
@@ -144,100 +218,32 @@
 </div>
 
 <div class="filter-bar">
-    <button class="filter-btn active" onclick="filterPosts('all', this)">🌿 Hamısı</button>
-    <button class="filter-btn" onclick="filterPosts('baslangic', this)">🔰 Başlanğıc</button>
-    <button class="filter-btn" onclick="filterPosts('avadanliq', this)">🎒 Avadanlıq</button>
-    <button class="filter-btn" onclick="filterPosts('azerbaycan', this)">🇦🇿 Azərbaycan</button>
-    <button class="filter-btn" onclick="filterPosts('tecrube', this)">🏔️ Təcrübə</button>
+    <button class="filter-btn active" onclick="filterBlogs('all', this)">🌿 Hamısı</button>
+    <button class="filter-btn" onclick="filterBlogs('Başlanğıc', this)">🔰 Başlanğıc</button>
+    <button class="filter-btn" onclick="filterBlogs('Avadanlıq', this)">🎒 Avadanlıq</button>
+    <button class="filter-btn" onclick="filterBlogs('Azərbaycan', this)">🇦🇿 Azərbaycan</button>
+    <button class="filter-btn" onclick="filterBlogs('Təcrübə', this)">🏔️ Təcrübə</button>
 </div>
 
 <div class="blog-container">
-    <div class="blog-grid" id="blogGrid">
+    <div class="loading" id="loading">⏳ Yazılar yüklənir...</div>
+    <div class="blog-grid" id="blogGrid" style="display:none"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+        <div class="icon">📭</div>
+        <p>Hələ blog yazısı yoxdur.</p>
+    </div>
+</div>
 
-        <div class="blog-card" data-category="baslangic">
-            <div class="blog-img">🏕️</div>
-            <div class="blog-info">
-                <span class="blog-tag">Başlanğıc</span>
-                <h3>Kempinqə İlk Dəfə Gedənlər Üçün 10 Tövsiyə</h3>
-                <p>İlk kempinq səfərinizə çıxmazdan əvvəl bilməli olduğunuz ən vacib məlumatlar.</p>
-                <div class="blog-meta">
-                    <span>📅 1 İyun 2026</span>
-                    <span>⏱️ 5 dəq oxu</span>
-                </div>
-                <a href="#" class="read-more">Davam et →</a>
-            </div>
+<!-- BLOG POST POPUP -->
+<div class="post-overlay" id="postOverlay">
+    <div class="post-box">
+        <button class="post-close" onclick="closePost()">✕</button>
+        <div id="postCoverContainer"></div>
+        <div class="post-content">
+            <h1 id="postTitle"></h1>
+            <div class="post-meta" id="postMeta"></div>
+            <div class="post-body" id="postBody"></div>
         </div>
-
-        <div class="blog-card" data-category="avadanliq">
-            <div class="blog-img">🎒</div>
-            <div class="blog-info">
-                <span class="blog-tag">Avadanlıq</span>
-                <h3>Ən Yaxşı Kempinq Çantası Necə Seçilir?</h3>
-                <p>Çanta seçərkən nəyə diqqət etmək lazımdır? Həcm, çəki, material müqayisəsi.</p>
-                <div class="blog-meta">
-                    <span>📅 28 May 2026</span>
-                    <span>⏱️ 7 dəq oxu</span>
-                </div>
-                <a href="#" class="read-more">Davam et →</a>
-            </div>
-        </div>
-
-        <div class="blog-card" data-category="azerbaycan">
-            <div class="blog-img">🏔️</div>
-            <div class="blog-info">
-                <span class="blog-tag">Azərbaycan</span>
-                <h3>Azərbaycanda Ən Gözəl 5 Kempinq Yeri</h3>
-                <p>Şahdağdan Qobustana — ölkəmizdəki ən möhtəşəm outdoor məkanları.</p>
-                <div class="blog-meta">
-                    <span>📅 25 May 2026</span>
-                    <span>⏱️ 6 dəq oxu</span>
-                </div>
-                <a href="#" class="read-more">Davam et →</a>
-            </div>
-        </div>
-
-        <div class="blog-card" data-category="avadanliq">
-            <div class="blog-img">🔦</div>
-            <div class="blog-info">
-                <span class="blog-tag">Avadanlıq</span>
-                <h3>Kempinqdə Mütləq Lazım Olan 15 Əşya</h3>
-                <p>Heç bir kempinqdə unutmamalı olduğunuz əsas avadanlıqların tam siyahısı.</p>
-                <div class="blog-meta">
-                    <span>📅 20 May 2026</span>
-                    <span>⏱️ 4 dəq oxu</span>
-                </div>
-                <a href="#" class="read-more">Davam et →</a>
-            </div>
-        </div>
-
-        <div class="blog-card" data-category="tecrube">
-            <div class="blog-img">🌄</div>
-            <div class="blog-info">
-                <span class="blog-tag">Təcrübə</span>
-                <h3>Qışda Kempinq: Bilməli Olduğunuz Hər Şey</h3>
-                <p>Soyuq havada kempinq etmək istəyənlər üçün təhlükəsizlik qaydaları.</p>
-                <div class="blog-meta">
-                    <span>📅 15 May 2026</span>
-                    <span>⏱️ 8 dəq oxu</span>
-                </div>
-                <a href="#" class="read-more">Davam et →</a>
-            </div>
-        </div>
-
-        <div class="blog-card" data-category="baslangic">
-            <div class="blog-img">🍳</div>
-            <div class="blog-info">
-                <span class="blog-tag">Başlanğıc</span>
-                <h3>Kempinqdə Asan və Dadlı Yeməklər</h3>
-                <p>Çöldə bişirilə bilən ən asan 10 yemək resepti — minimal avadanlıqla maksimal ləzzət.</p>
-                <div class="blog-meta">
-                    <span>📅 10 May 2026</span>
-                    <span>⏱️ 5 dəq oxu</span>
-                </div>
-                <a href="#" class="read-more">Davam et →</a>
-            </div>
-        </div>
-
     </div>
 </div>
 
@@ -246,24 +252,133 @@
         <img src="images/logo.jpeg" alt="CampTrade">
     </div>
     <div class="social-links">
-        <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
-        <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
+        <a href="https://facebook.com/LINKINI_YAZ" target="_blank">📘 Facebook</a>
+        <a href="https://instagram.com/LINKINI_YAZ" target="_blank">📸 Instagram</a>
+        <a href="https://wa.me/994NOMERINIYAZ" target="_blank">💬 WhatsApp</a>
+        <a href="https://tiktok.com/@LINKINI_YAZ" target="_blank">📱 TikTok</a>
     </div>
     <p>© 2026 CampTrade. All rights reserved.</p>
 </footer>
 
 <script>
-    function filterPosts(category, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.blog-card').forEach(card => {
-            if (category === 'all' || card.dataset.category === category) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
+var SUPABASE_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
+var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+
+var allBlogs = [];
+var currentFilter = 'all';
+
+function loadBlogs() {
+    fetch(SUPABASE_URL + '/rest/v1/blogs?order=created_at.desc', {
+        headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+        }
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(blogs) {
+        document.getElementById('loading').style.display = 'none';
+
+        if (!blogs || blogs.length === 0) {
+            document.getElementById('emptyState').style.display = 'block';
+            return;
+        }
+
+        allBlogs = blogs;
+        renderBlogs(blogs);
+    })
+    .catch(function() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+    });
+}
+
+function renderBlogs(blogs) {
+    var grid = document.getElementById('blogGrid');
+    var empty = document.getElementById('emptyState');
+
+    if (!blogs || blogs.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+        return;
     }
+
+    empty.style.display = 'none';
+    grid.style.display = 'grid';
+    grid.innerHTML = '';
+
+    blogs.forEach(function(b, index) {
+        var card = document.createElement('div');
+        card.className = 'blog-card';
+
+        var imgHtml = b.sekil
+            ? '<div class="blog-img"><img src="' + b.sekil + '" alt="' + b.baslig + '" onerror="this.parentElement.innerHTML=\'📰\'"></div>'
+            : '<div class="blog-img">📰</div>';
+
+        var date = new Date(b.created_at).toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
+
+        card.innerHTML =
+            imgHtml +
+            '<div class="blog-info">' +
+                '<span class="blog-tag">' + b.kateqoriya + '</span>' +
+                '<h3>' + b.baslig + '</h3>' +
+                '<div class="blog-meta">' +
+                    '<span>📅 ' + date + '</span>' +
+                    '<span>⏱️ ' + b.oxuma_muddeti + '</span>' +
+                '</div>' +
+                '<span class="read-more">Davam et →</span>' +
+            '</div>';
+
+        card.addEventListener('click', function() {
+            openPost(index);
+        });
+
+        grid.appendChild(card);
+    });
+}
+
+function filterBlogs(category, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentFilter = category;
+
+    if (category === 'all') {
+        renderBlogs(allBlogs);
+    } else {
+        var filtered = allBlogs.filter(function(b) { return b.kateqoriya === category; });
+        renderBlogs(filtered);
+    }
+}
+
+function openPost(index) {
+    var b = allBlogs[index];
+    var date = new Date(b.created_at).toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
+
+    var coverHtml = b.sekil
+        ? '<img class="post-cover" src="' + b.sekil + '" alt="' + b.baslig + '" onerror="this.style.display=\'none\'">'
+        : '<div class="post-cover-placeholder">📰</div>';
+
+    document.getElementById('postCoverContainer').innerHTML = coverHtml;
+    document.getElementById('postTitle').textContent = b.baslig;
+    document.getElementById('postMeta').innerHTML =
+        '<span class="blog-tag">' + b.kateqoriya + '</span>' +
+        '<span>📅 ' + date + '</span>' +
+        '<span>⏱️ ' + b.oxuma_muddeti + '</span>';
+    document.getElementById('postBody').innerHTML = b.metn;
+
+    document.getElementById('postOverlay').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closePost() {
+    document.getElementById('postOverlay').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+document.getElementById('postOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closePost();
+});
+
+loadBlogs();
 </script>
 
 </body>
