@@ -46,7 +46,16 @@
         .product-info h3 { font-size: 18px; color: #2d5a1b; margin-bottom: 8px; }
         .product-price { font-size: 24px; font-weight: 700; color: #f5a623; margin-bottom: 8px; }
         .price-label { font-size: 13px; color: #888; font-weight: normal; }
-        .product-desc { font-size: 14px; color: #666; margin-bottom: 12px; line-height: 1.6; }
+        .product-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
         .contact-btn {
             display: block;
             background: #25D366;
