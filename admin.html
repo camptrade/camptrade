@@ -166,6 +166,52 @@
             .admin-content { padding: 0 15px; }
             .product-item { flex-wrap: wrap; }
         }
+        .edit-btn {
+    background: #e8f5e9;
+    color: #2d5a1b;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+.edit-btn:hover { background: #2d5a1b; color: white; }
+
+.edit-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.edit-box {
+    max-width: 700px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    position: relative;
+}
+
+.edit-box h2 { color: #2d5a1b; margin-bottom: 25px; font-size: 22px; }
+
+.edit-close {
+    position: absolute;
+    top: 15px; right: 15px;
+    background: #eee;
+    border: none;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
@@ -585,41 +631,42 @@
     }
 
     async function loadList(category) {
-        var containerId = category + 'ListContent';
-        var container = document.getElementById(containerId);
-        container.innerHTML = '<div class="empty-list">⏳ Yüklənir...</div>';
+    var containerId = category + 'ListContent';
+    var container = document.getElementById(containerId);
+    container.innerHTML = '<div class="empty-list">⏳ Yüklənir...</div>';
 
-        try {
-            var res = await fetch(SUPABASE_URL + '/rest/v1/products?kateqoriya=eq.' + category + '&order=created_at.desc', {
-                headers: {
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY
-                }
-            });
-            var products = await res.json();
-
-            if (!products || products.length === 0) {
-                container.innerHTML = '<div class="empty-list">📭 Hələ məhsul əlavə edilməyib</div>';
-                return;
+    try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/products?kateqoriya=eq.' + category + '&order=created_at.desc', {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY
             }
+        });
+        var products = await res.json();
 
-            container.innerHTML = products.map(function(p) {
-                var firstImg = p.sekiller ? p.sekiller.split(',')[0] : 'images/logo.jpeg';
-                return '<div class="product-item">' +
-                    '<img src="' + firstImg + '" alt="' + p.ad + '" onerror="this.src=\'images/logo.jpeg\'">' +
-                    '<div class="product-item-info">' +
-                        '<h3>' + p.ad + '</h3>' +
-                        '<p>' + p.melumat.substring(0, 60) + '...</p>' +
-                        '<p style="color:#2d5a1b;font-size:12px;margin-top:4px">' + p.veziyyet + '</p>' +
-                    '</div>' +
-                    '<div class="product-item-price">' + p.qiymet + ' AZN</div>' +
-                    '<button class="delete-btn" onclick="deleteProduct(\'' + p.id + '\',\'' + category + '\')">🗑️ Sil</button>' +
-                '</div>';
-            }).join('');
-        } catch(e) {
-            container.innerHTML = '<div class="empty-list">❌ Xəta baş verdi</div>';
+        if (!products || products.length === 0) {
+            container.innerHTML = '<div class="empty-list">📭 Hələ məhsul əlavə edilməyib</div>';
+            return;
         }
+
+        container.innerHTML = products.map(function(p) {
+            var firstImg = p.sekiller ? p.sekiller.split(',')[0] : 'images/logo.jpeg';
+            return '<div class="product-item">' +
+                '<img src="' + firstImg + '" alt="' + p.ad + '" onerror="this.src=\'images/logo.jpeg\'">' +
+                '<div class="product-item-info">' +
+                    '<h3>' + p.ad + '</h3>' +
+                    '<p>' + p.melumat.substring(0, 60) + '...</p>' +
+                    '<p style="color:#2d5a1b;font-size:12px;margin-top:4px">' + p.veziyyet + '</p>' +
+                '</div>' +
+                '<div class="product-item-price">' + p.qiymet + ' AZN</div>' +
+                '<button class="edit-btn" onclick="openEdit(\'' + p.id + '\',\'' + category + '\')">✏️ Düzəlt</button>' +
+                '<button class="delete-btn" onclick="deleteProduct(\'' + p.id + '\',\'' + category + '\')">🗑️ Sil</button>' +
+            '</div>';
+        }).join('');
+    } catch(e) {
+        container.innerHTML = '<div class="empty-list">❌ Xəta baş verdi</div>';
     }
+}
 
     async function deleteProduct(id, category) {
         if (!confirm('Bu məhsulu silmək istəyirsiniz?')) return;
@@ -679,7 +726,169 @@
         if (res.ok) loadBlogList();
         else alert('❌ Silmə zamanı xəta');
     }
-</script>
+    var editingId = '';
+    var editingCategory = '';
 
+    async function openEdit(id, category) {
+        editingId = id;
+        editingCategory = category;
+
+        // Load product data
+        var res = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + id, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY
+            }
+        });
+        var data = await res.json();
+        var p = data[0];
+
+        // Fill form
+        document.getElementById('editName').value = p.ad;
+        document.getElementById('editPrice').value = p.qiymet;
+        document.getElementById('editDesc').value = p.melumat;
+        document.getElementById('editWhatsapp').value = p.whatsapp;
+        document.getElementById('editCondition').value = p.veziyyet || 'Yeni';
+
+        // Show condition field only for satis
+        document.getElementById('editConditionGroup').style.display = category === 'satis' ? 'block' : 'none';
+
+        // Show current images
+        var imgs = p.sekiller ? p.sekiller.split(',').filter(function(x) { return x.trim(); }) : [];
+        var imgHtml = imgs.map(function(src) {
+            return '<img src="' + src + '" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid #ddd;">';
+        }).join('');
+        document.getElementById('editCurrentImages').innerHTML = imgHtml ? '<p style="font-size:13px;color:#888;margin-bottom:8px;">Mövcud şəkillər:</p>' + imgHtml : '';
+
+        document.getElementById('editModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEdit() {
+        document.getElementById('editModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    async function saveEdit() {
+        var name = document.getElementById('editName').value.trim();
+        var price = document.getElementById('editPrice').value;
+        var desc = document.getElementById('editDesc').value.trim();
+        var whatsapp = document.getElementById('editWhatsapp').value.trim();
+        var condition = document.getElementById('editCondition').value;
+        var newFiles = document.getElementById('editNewPhotos').files;
+
+        if (!name || !price || !desc || !whatsapp) {
+            alert('❌ Bütün sahələri doldurun!');
+            return;
+        }
+
+        var saveBtn = document.getElementById('editSaveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Yüklənir...';
+
+        try {
+            // Upload new photos if any
+            var newUrls = [];
+            for (var i = 0; i < newFiles.length; i++) {
+                var url = await uploadToImgBB(newFiles[i]);
+                if (url) newUrls.push(url);
+            }
+
+            // Get existing images
+            var existingRes = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + editingId, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+            });
+            var existingData = await existingRes.json();
+            var existingImgs = existingData[0].sekiller ? existingData[0].sekiller.split(',').filter(function(x) { return x.trim(); }) : [];
+
+            // Combine old + new images
+            var allImgs = existingImgs.concat(newUrls);
+
+            var updateData = {
+                ad: name,
+                qiymet: parseFloat(price),
+                melumat: desc,
+                whatsapp: whatsapp,
+                veziyyet: condition,
+                sekiller: allImgs.join(',')
+            };
+
+            var res = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + editingId, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify(updateData)
+            });
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Yadda Saxla';
+
+            if (res.ok) {
+                closeEdit();
+                loadList(editingCategory);
+                alert('✅ Məhsul uğurla yeniləndi!');
+            } else {
+                alert('❌ Xəta baş verdi');
+            }
+        } catch(e) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Yadda Saxla';
+            alert('❌ Xəta: ' + e.message);
+        }
+    }
+</script>
+<!-- EDIT MODAL -->
+<div class="edit-modal" id="editModal">
+    <div class="edit-box">
+        <button class="edit-close" onclick="closeEdit()">✕</button>
+        <h2>✏️ Məhsulu Düzəlt</h2>
+
+        <div class="form-group">
+            <label>📝 Məhsul Adı</label>
+            <input type="text" id="editName">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>💰 Qiymət (AZN)</label>
+                <input type="number" id="editPrice">
+            </div>
+            <div class="form-group" id="editConditionGroup">
+                <label>✅ Vəziyyət</label>
+                <select id="editCondition">
+                    <option value="Yeni">🟢 Yeni</option>
+                    <option value="İşlənmiş - Əla">🟡 İşlənmiş - Əla</option>
+                    <option value="İşlənmiş - Yaxşı">🟠 İşlənmiş - Yaxşı</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>📋 Məhsul Haqqında</label>
+            <textarea id="editDesc" style="height:120px;"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>📱 WhatsApp Nömrə</label>
+            <input type="text" id="editWhatsapp">
+        </div>
+
+        <div class="form-group">
+            <div id="editCurrentImages" style="margin-bottom:15px; display:flex; gap:8px; flex-wrap:wrap;"></div>
+            <label>📷 Yeni Şəkil Əlavə Et (köhnə şəkillər saxlanılır)</label>
+            <div class="photo-upload-area">
+                <input type="file" id="editNewPhotos" accept="image/*" multiple>
+                <div class="upload-icon">📸</div>
+                <p>Yeni şəkil əlavə etmək üçün bas</p>
+            </div>
+        </div>
+
+        <button class="submit-btn" id="editSaveBtn" onclick="saveEdit()">💾 Yadda Saxla</button>
+    </div>
+</div>
 </body>
 </html>
