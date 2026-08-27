@@ -55,6 +55,7 @@
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            white-space: pre-line;
         }
         .product-condition {
             display: inline-block;
@@ -318,7 +319,7 @@ function loadProducts() {
                     '<h3>' + p.ad + '</h3>' +
                     '<div class="product-price">' + p.qiymet + ' AZN</div>' +
                     '<span class="product-condition">' + (p.veziyyet || 'Yeni') + '</span>' +
-                    '<p class="product-desc">' + p.melumat + '</p>' +
+                    '<p class="product-desc">' + p.melumat.replace(/\n/g, '<br>') + '</p>' +
                     '<a href="https://wa.me/' + p.whatsapp + '" class="contact-btn" target="_blank">💬 WhatsApp ilə Əlaqə</a>' +
                 '</div>';
 
@@ -378,7 +379,7 @@ function openPopup(index) {
     document.getElementById('pTitle').textContent = p.ad;
     document.getElementById('pPrice').textContent = p.qiymet + ' AZN';
     document.getElementById('pCondition').textContent = p.veziyyet || '';
-    document.getElementById('pDesc').textContent = p.melumat;
+    document.getElementById('pDesc').innerHTML = p.melumat.replace(/\n/g, '<br>');
     document.getElementById('pWa').href = 'https://wa.me/' + p.whatsapp;
 
     document.getElementById('popup').style.display = 'block';
