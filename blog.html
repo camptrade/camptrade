@@ -326,7 +326,7 @@ function renderBlogs(blogs) {
                     '<span>📅 ' + date + '</span>' +
                     '<span>⏱️ ' + b.oxuma_muddeti + '</span>' +
                 '</div>' +
-                '<span class="read-more">Davam et →</span>' +
+                '<a href="blog-post.html?id=' + b.id + '" class="read-more">Davam et →</a>' +
             '</div>';
 
         card.addEventListener('click', function() {
@@ -352,22 +352,7 @@ function filterBlogs(category, btn) {
 
 function openPost(index) {
     var b = allBlogs[index];
-    var date = new Date(b.created_at).toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
-
-    var coverHtml = b.sekil
-        ? '<img class="post-cover" src="' + b.sekil + '" alt="' + b.baslig + '" onerror="this.style.display=\'none\'">'
-        : '<div class="post-cover-placeholder">📰</div>';
-
-    document.getElementById('postCoverContainer').innerHTML = coverHtml;
-    document.getElementById('postTitle').textContent = b.baslig;
-    document.getElementById('postMeta').innerHTML =
-        '<span class="blog-tag">' + b.kateqoriya + '</span>' +
-        '<span>📅 ' + date + '</span>' +
-        '<span>⏱️ ' + b.oxuma_muddeti + '</span>';
-    document.getElementById('postBody').innerHTML = b.metn;
-
-    document.getElementById('postOverlay').style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    window.location.href = 'blog-post.html?id=' + b.id;
 }
 
 function closePost() {
