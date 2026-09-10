@@ -24,17 +24,23 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 25%;
+    object-position: center 30%; /* İnsanın üzü və bədəni daha yaxşı mərkəzləşsin */
     display: block;
     transition: transform 10s ease;
-    filter: brightness(0.92);
+    
+    /* Şəkli biraz tündləşdiririk ki, ağ yazılar rahat oxunsun */
+    filter: brightness(0.75); 
 
-    /* Cırılmış kağız / kələ-kötür kənar maskası */
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L1200,0 L1200,80 Q1150,110 1100,85 T1000,90 T900,65 T800,100 T700,75 T600,95 T500,70 T400,105 T300,80 T200,95 T100,70 T0,90 Z' fill='black'/%3E%3C/svg%3E");
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L1200,0 L1200,80 Q1150,110 1100,85 T1000,90 T900,65 T800,100 T700,75 T600,95 T500,70 T400,105 T300,80 T200,95 T100,70 T0,90 Z' fill='black'/%3E%3C/svg%3E");
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
-}
+    /* Aşağıya doğru yumşaq keçid (fade out) */
+    mask-image: linear-gradient(to bottom, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 60%, 
+        rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 60%, 
+        rgba(0, 0, 0, 0) 100%);
+    }
 
     .post-hero-section:hover .post-hero-img {
         transform: scale(1.04);
@@ -487,35 +493,43 @@ async function loadPost() {
         var igLink = 'https://www.instagram.com/';
 
         var heroHtml = b.sekil
-            ? '<img class="post-hero-img" src="' + b.sekil + '" alt="' + b.baslig + '">'
-            : '<div class="post-hero-placeholder">📰</div>';
+    ? '<img class="post-hero-img" src="' + b.sekil + '" alt="' + b.baslig + '">'
+    : '<div class="post-hero-placeholder">📰</div>';
 
-        container.innerHTML =
-            '<div class="post-hero-section">' +
-                '<a href="blog.html" class="back-btn">← Bloga Qayıt</a>' +
-                heroHtml +
-                '<div class="post-hero-top-fade"></div>' +
-                '<div class="post-hero-overlay"></div>' +
-                '<div class="post-hero-content">' +
-                    '<span class="post-tag">' + b.kateqoriya + '</span>' +
-                    '<h1 class="post-hero-title">' + b.baslig + '</h1>' +
-                    '<div class="post-hero-meta">' +
-                        '<span>📅 ' + date + '</span>' +
-                        '<span>⏱️ ' + b.oxuma_muddeti + '</span>' +
-                    '</div>' +
-                '</div>' +
+// Torn-divider SVG kodu
+var tornDivider = '<div class="torn-divider" style="position: absolute; bottom: -1px; left: 0; width: 100%; overflow: hidden; line-height: 0; z-index: 2;">' +
+    '<svg viewBox="0 0 1200 120" preserveAspectRatio="none" style="position: relative; display: block; width: 100%; height: 50px; fill: #ffffff;">' +
+        '<path d="M0,0 L40,35 L80,10 L120,45 L160,15 L200,40 L240,5 L280,30 L320,15 L360,50 L400,20 L440,40 L480,10 L520,35 L560,15 L600,45 L640,20 L680,40 L720,10 L760,35 L800,15 L840,45 L880,10 L920,35 L960,15 L1000,40 L1040,10 L1080,35 L1120,15 L1160,40 L1200,10 L1200,120 L0,120 Z"></path>' +
+    '</svg>' +
+'</div>';
+
+container.innerHTML =
+    '<div class="post-hero-section">' +
+        '<a href="blog.html" class="back-btn">← Bloga Qayıt</a>' +
+        heroHtml +
+        tornDivider +
+        '<div class="post-hero-top-fade"></div>' +
+        '<div class="post-hero-overlay"></div>' +
+        '<div class="post-hero-content">' +
+            '<span class="post-tag">' + b.kateqoriya + '</span>' +
+            '<h1 class="post-hero-title">' + b.baslig + '</h1>' +
+            '<div class="post-hero-meta">' +
+                '<span>📅 ' + date + '</span>' +
+                '<span>⏱️ ' + b.oxuma_muddeti + '</span>' +
             '</div>' +
-            '<div class="article-wrapper">' +
-                '<div class="article-body">' + b.metn + '</div>' +
-                '<div class="article-divider"></div>' +
-                '<div class="share-section">' +
-                    '<p>Bu yazını paylaş</p>' +
-                    '<div class="share-btns">' +
-                        '<a href="' + waLink + '" class="share-btn wa" target="_blank">💬 WhatsApp</a>' +
-                        '<button onclick="copyLink()" class="share-btn copy" style="border:none;cursor:pointer;">🔗 Linki Kopyala</button>' +
-                    '</div>' +
-                '</div>' +
-            '</div>';
+        '</div>' +
+    '</div>' +
+    '<div class="article-wrapper">' +
+        '<div class="article-body">' + b.metn + '</div>' +
+        '<div class="article-divider"></div>' +
+        '<div class="share-section">' +
+            '<p>Bu yazını paylaş</p>' +
+            '<div class="share-btns">' +
+                '<a href="' + waLink + '" class="share-btn wa" target="_blank">💬 WhatsApp</a>' +
+                '<button onclick="copyLink()" class="share-btn copy" style="border:none;cursor:pointer;">🔗 Linki Kopyala</button>' +
+            '</div>' +
+        '</div>' +
+    '</div>';
 
         loadRelated(b.id, b.kateqoriya);
 
