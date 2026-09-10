@@ -371,63 +371,114 @@
         </div>
 
         <!-- ADD BLOG -->
-        <div id="addBlog" style="display:none">
-            <div class="form-card">
-                <h2>📝 Yeni Blog Yazısı</h2>
+<div id="addBlog" style="display:none">
+    <div class="form-card">
+        <h2>📝 Yeni Blog Yazısı</h2>
 
-                <div class="form-group">
-                    <label>📌 Başlıq</label>
-                    <input type="text" id="blogTitle" placeholder="Məs: Kempinqə Gedərkən Nə Lazımdır?">
-                </div>
+        <div class="form-group">
+            <label>📌 Başlıq</label>
+            <input type="text" id="blogTitle" placeholder="Məs: Kempinqə Gedərkən Nə Lazımdır?">
+        </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>🏷️ Kateqoriya</label>
-                        <select id="blogCategory">
-                            <option value="Başlanğıc">🔰 Başlanğıc</option>
-                            <option value="Avadanlıq">🎒 Avadanlıq</option>
-                            <option value="Azərbaycan">🇦🇿 Azərbaycan</option>
-                            <option value="Təcrübə">🏔️ Təcrübə</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>⏱️ Oxuma müddəti</label>
-                        <input type="text" id="blogReadTime" placeholder="Məs: 5 dəq oxu">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>📷 Kapaq Şəkli</label>
-                    <div class="photo-upload-area">
-                        <input type="file" id="blogPhotoFile" accept="image/*" onchange="previewBlogPhoto(this)">
-                        <div class="upload-icon">📸</div>
-                        <p>Şəkil yükləmək üçün bura bas</p>
-                    </div>
-                    <img id="blogPhotoPreview" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-top:10px; display:none;" alt="preview">
-                    <input type="text" id="blogPhotoUrl" placeholder="Və ya şəkil linki yapışdır" style="margin-top:10px; width:100%; padding:12px; border:2px solid #ddd; border-radius:10px; font-size:15px; outline:none; font-family:inherit;">
-                </div>
-
-                <div class="form-group">
-                    <label>✍️ Məqalə Mətni</label>
-                    <div style="border:2px solid #ddd; border-radius:10px; overflow:hidden;">
-                        <div class="blog-editor-toolbar">
-                            <button type="button" onclick="formatText('bold')"><b>B</b></button>
-                            <button type="button" onclick="formatText('italic')"><i>I</i></button>
-                            <button type="button" onclick="insertHeading()">H2</button>
-                            <button type="button" onclick="insertList()">• List</button>
-                            <button type="button" onclick="insertTip()" style="background:#e8f5e9; color:#2d5a1b; border-color:#2d5a1b;">💡 Tip</button>
-                        </div>
-                        <div id="blogContent" class="blog-editor-body" contenteditable="true">
-                            Buraya məqalənizi yazın...
-                        </div>
-                    </div>
-                </div>
-
-                <button class="submit-btn" id="blogSubmitBtn" onclick="addBlog()">✅ Blogu Yayımla</button>
-                <div class="loading-spinner" id="blogSpinner">⏳ Yüklənir...</div>
-                <div class="success-msg" id="blogSuccessMsg">🎉 Blog uğurla yayımlandı!</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>🏷️ Kateqoriya</label>
+                <select id="blogCategory">
+                    <option value="Başlanğıc">🔰 Başlanğıc</option>
+                    <option value="Avadanlıq">🎒 Avadanlıq</option>
+                    <option value="Azərbaycan">🇦🇿 Azərbaycan</option>
+                    <option value="Təcrübə">🏔️ Təcrübə</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>⏱️ Oxuma müddəti</label>
+                <input type="text" id="blogReadTime" placeholder="Məs: 5 dəq oxu">
             </div>
         </div>
+
+        <div class="form-group">
+            <label>📷 Kapaq Şəkli (Əsas şəkil - yuxarıda görünür)</label>
+            <div class="photo-upload-area">
+                <input type="file" id="blogPhotoFile" accept="image/*" onchange="previewBlogPhoto(this)">
+                <div class="upload-icon">📸</div>
+                <p>Kapaq şəklini yükləmək üçün bura bas</p>
+            </div>
+            <img id="blogPhotoPreview" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-top:10px; display:none;" alt="preview">
+            <input type="text" id="blogPhotoUrl" placeholder="Və ya şəkil linki yapışdır" style="margin-top:10px; width:100%; padding:12px; border:2px solid #ddd; border-radius:10px; font-size:15px; outline:none; font-family:inherit;">
+        </div>
+
+        <div class="form-group">
+            <label>✍️ Məqalə Mətni</label>
+            <div style="border:2px solid #ddd; border-radius:10px; overflow:hidden; background:white;">
+
+                <!-- TOOLBAR -->
+                <div style="background:#f8f8f8; padding:10px 12px; display:flex; gap:6px; flex-wrap:wrap; border-bottom:2px solid #eee; align-items:center;">
+
+                    <!-- Text formatting -->
+                    <button type="button" onclick="blogCmd('bold')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:14px;" title="Qalın">B</button>
+
+                    <button type="button" onclick="blogCmd('italic')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-style:italic;font-size:14px;" title="İtalik">I</button>
+
+                    <button type="button" onclick="blogCmd('underline')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;text-decoration:underline;font-size:14px;" title="Alt xətt">U</button>
+
+                    <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+                    <!-- Headings -->
+                    <button type="button" onclick="blogBlock('h2')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;" title="Başlıq">H2</button>
+
+                    <button type="button" onclick="blogBlock('h3')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;" title="Alt başlıq">H3</button>
+
+                    <button type="button" onclick="blogBlock('p')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;" title="Normal mətn">¶</button>
+
+                    <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+                    <!-- Lists -->
+                    <button type="button" onclick="blogCmd('insertUnorderedList')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:14px;" title="Siyahı">• List</button>
+
+                    <button type="button" onclick="blogCmd('insertOrderedList')"
+                        style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:14px;" title="Nömrəli siyahı">1. List</button>
+
+                    <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+                    <!-- Special -->
+                    <button type="button" onclick="insertBlogTip()"
+                        style="background:#e8f5e9;border:1px solid #2d5a1b;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:#2d5a1b;font-weight:600;" title="Məsləhət qutusu">💡 Tip</button>
+
+                    <button type="button" onclick="insertBlogImage()"
+                        style="background:#fff3e0;border:1px solid #f5a623;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:#e65100;font-weight:600;" title="Şəkil əlavə et">📷 Şəkil</button>
+
+                    <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+                    <!-- Align -->
+                    <button type="button" onclick="blogCmd('justifyLeft')"
+                        style="background:white;border:1px solid #ddd;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:14px;" title="Sol">≡</button>
+
+                    <button type="button" onclick="blogCmd('justifyCenter')"
+                        style="background:white;border:1px solid #ddd;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:14px;" title="Orta">≡</button>
+                </div>
+
+                <!-- EDITOR -->
+                <div id="blogContent"
+                    contenteditable="true"
+                    style="padding:20px; min-height:350px; outline:none; font-size:15px; line-height:1.8; font-family:'Segoe UI',sans-serif; color:#333;">
+                    <p>Buraya məqalənizi yazın...</p>
+                </div>
+            </div>
+            <p style="font-size:12px;color:#aaa;margin-top:8px;">💡 Mətn seçib B/I/U düymələrinə basın. Şəkil əlavə etmək üçün 📷 düyməsini basın.</p>
+        </div>
+
+        <button class="submit-btn" id="blogSubmitBtn" onclick="addBlog()">✅ Blogu Yayımla</button>
+        <div class="loading-spinner" id="blogSpinner">⏳ Yüklənir...</div>
+        <div class="success-msg" id="blogSuccessMsg">🎉 Blog uğurla yayımlandı!</div>
+    </div>
+</div>
 
         <!-- BLOG LIST -->
         <div id="blogList" style="display:none">
@@ -723,19 +774,43 @@
         }
     }
 
-    function formatText(cmd) {
+        function blogCmd(cmd) {
+        document.getElementById('blogContent').focus();
         document.execCommand(cmd, false, null);
-        document.getElementById('blogContent').focus();
     }
 
-    function insertHeading() {
-        document.execCommand('formatBlock', false, 'h2');
+    function blogBlock(tag) {
         document.getElementById('blogContent').focus();
+        document.execCommand('formatBlock', false, tag);
     }
 
-    function insertList() {
-        document.execCommand('insertUnorderedList', false, null);
+    function insertBlogTip() {
         document.getElementById('blogContent').focus();
+        var tip = '<div style="background:#e8f5e9;border-left:4px solid #2d5a1b;padding:14px 18px;border-radius:0 10px 10px 0;margin:20px 0;"><p style="margin:0;color:#2d5a1b;font-weight:600;">💡 Məsləhət: buraya yazın</p></div><p></p>';
+        document.execCommand('insertHTML', false, tip);
+    }
+
+    function insertBlogImage() {
+        var url = prompt('Şəkil linkini daxil edin (URL):');
+        if (!url) return;
+        var caption = prompt('Şəkilin altında yazı (istəyə bağlı - boş buraxsanız keçin):') || '';
+        document.getElementById('blogContent').focus();
+        var imgHtml = '<div style="margin:25px 0;text-align:center;">' +
+            '<img src="' + url + '" style="max-width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);" alt="' + caption + '">' +
+            (caption ? '<p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">' + caption + '</p>' : '') +
+            '</div><p></p>';
+        document.execCommand('insertHTML', false, imgHtml);
+    }
+
+    function insertEditBlogImage() {
+        var url = prompt('Şəkil linkini daxil edin:');
+        if (!url) return;
+        var caption = prompt('Şəkilin altında yazı (boş buraxsanız keçin):') || '';
+        document.getElementById('editBlogContent').focus();
+        var imgHtml = '<div style="margin:25px 0;text-align:center;"><img src="' + url + '" style="max-width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);" alt="' + caption + '">' +
+            (caption ? '<p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">' + caption + '</p>' : '') +
+            '</div><p></p>';
+        document.execCommand('insertHTML', false, imgHtml);
     }
 
     function insertTip() {
@@ -1047,13 +1122,16 @@
 
     // ============ BLOG LIST ============
 
-    async function loadBlogList() {
+        async function loadBlogList() {
         var container = document.getElementById('blogListContent');
         container.innerHTML = '<div class="empty-list">⏳ Yüklənir...</div>';
 
         try {
             var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?order=created_at.desc', {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_KEY
+                }
             });
             var blogs = await res.json();
 
@@ -1069,6 +1147,7 @@
                         '<h3>' + b.baslig + '</h3>' +
                         '<p>' + b.kateqoriya + ' · ' + b.oxuma_muddeti + '</p>' +
                     '</div>' +
+                    '<button class="edit-btn" onclick="openBlogEdit(\'' + b.id + '\')">✏️ Düzəlt</button>' +
                     '<button class="delete-btn" onclick="deleteBlog(\'' + b.id + '\')">🗑️ Sil</button>' +
                 '</div>';
             }).join('');
@@ -1086,7 +1165,153 @@
         if (res.ok) loadBlogList();
         else alert('❌ Silmə zamanı xəta');
     }
+
+        var editingBlogId = '';
+
+    async function openBlogEdit(id) {
+        editingBlogId = id;
+
+        var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?id=eq.' + id, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+        });
+        var data = await res.json();
+        var b = data[0];
+
+        document.getElementById('editBlogTitle').value = b.baslig;
+        document.getElementById('editBlogCategory').value = b.kateqoriya;
+        document.getElementById('editBlogReadTime').value = b.oxuma_muddeti;
+        document.getElementById('editBlogContent').innerHTML = b.metn;
+        document.getElementById('editBlogCurrentImg').src = b.sekil || '';
+        document.getElementById('editBlogCurrentImg').style.display = b.sekil ? 'block' : 'none';
+
+        document.getElementById('blogEditModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeBlogEdit() {
+        document.getElementById('blogEditModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    async function saveBlogEdit() {
+        var title = document.getElementById('editBlogTitle').value.trim();
+        var category = document.getElementById('editBlogCategory').value;
+        var readTime = document.getElementById('editBlogReadTime').value.trim();
+        var content = document.getElementById('editBlogContent').innerHTML;
+        var newPhoto = document.getElementById('editBlogPhoto').files[0];
+        var photoUrl = document.getElementById('editBlogPhotoUrl').value.trim();
+
+        if (!title || !readTime) {
+            alert('❌ Başlıq və oxuma müddəti mütləqdir!');
+            return;
+        }
+
+        var saveBtn = document.getElementById('blogEditSaveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Yüklənir...';
+
+        var finalImg = document.getElementById('editBlogCurrentImg').src || '';
+
+        try {
+            if (newPhoto) {
+                var url = await uploadToImgBB(newPhoto);
+                if (url) finalImg = url;
+            } else if (photoUrl) {
+                finalImg = photoUrl;
+            }
+
+            var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?id=eq.' + editingBlogId, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    baslig: title,
+                    metn: content,
+                    sekil: finalImg,
+                    kateqoriya: category,
+                    oxuma_muddeti: readTime
+                })
+            });
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Yadda Saxla';
+
+            if (res.ok) {
+                closeBlogEdit();
+                loadBlogList();
+                alert('✅ Blog uğurla yeniləndi!');
+            } else {
+                alert('❌ Xəta baş verdi');
+            }
+        } catch(e) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Yadda Saxla';
+            alert('❌ Xəta: ' + e.message);
+        }
+    }
+
 </script>
+
+<!-- BLOG EDIT MODAL -->
+<div class="edit-modal" id="blogEditModal">
+    <div class="edit-box" style="max-width:800px;">
+        <button class="edit-close" onclick="closeBlogEdit()">✕</button>
+        <h2>✏️ Blogu Düzəlt</h2>
+
+        <div class="form-group">
+            <label>📌 Başlıq</label>
+            <input type="text" id="editBlogTitle">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>🏷️ Kateqoriya</label>
+                <select id="editBlogCategory">
+                    <option value="Başlanğıc">🔰 Başlanğıc</option>
+                    <option value="Avadanlıq">🎒 Avadanlıq</option>
+                    <option value="Azərbaycan">🇦🇿 Azərbaycan</option>
+                    <option value="Təcrübə">🏔️ Təcrübə</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>⏱️ Oxuma müddəti</label>
+                <input type="text" id="editBlogReadTime">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>📷 Kapaq Şəkli</label>
+            <img id="editBlogCurrentImg" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-bottom:10px;" alt="">
+            <div class="photo-upload-area">
+                <input type="file" id="editBlogPhoto" accept="image/*">
+                <div class="upload-icon">📸</div>
+                <p>Yeni şəkil seç</p>
+            </div>
+            <input type="text" id="editBlogPhotoUrl" placeholder="Və ya yeni şəkil linki" style="margin-top:10px;width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:15px;outline:none;font-family:inherit;">
+        </div>
+
+        <div class="form-group">
+            <label>✍️ Məqalə Mətni</label>
+            <div style="border:2px solid #ddd;border-radius:10px;overflow:hidden;">
+                <div style="background:#f8f8f8;padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:2px solid #eee;">
+                    <button type="button" onclick="document.getElementById('editBlogContent').focus();document.execCommand('bold')" style="background:white;border:1px solid #ddd;padding:5px 10px;border-radius:5px;cursor:pointer;font-weight:bold;">B</button>
+                    <button type="button" onclick="document.getElementById('editBlogContent').focus();document.execCommand('italic')" style="background:white;border:1px solid #ddd;padding:5px 10px;border-radius:5px;cursor:pointer;font-style:italic;">I</button>
+                    <button type="button" onclick="document.getElementById('editBlogContent').focus();document.execCommand('underline')" style="background:white;border:1px solid #ddd;padding:5px 10px;border-radius:5px;cursor:pointer;text-decoration:underline;">U</button>
+                    <button type="button" onclick="document.getElementById('editBlogContent').focus();document.execCommand('formatBlock',false,'h2')" style="background:white;border:1px solid #ddd;padding:5px 10px;border-radius:5px;cursor:pointer;font-weight:700;">H2</button>
+                    <button type="button" onclick="document.getElementById('editBlogContent').focus();document.execCommand('insertUnorderedList')" style="background:white;border:1px solid #ddd;padding:5px 10px;border-radius:5px;cursor:pointer;">• List</button>
+                    <button type="button" onclick="insertEditBlogImage()" style="background:#fff3e0;border:1px solid #f5a623;padding:5px 10px;border-radius:5px;cursor:pointer;color:#e65100;font-weight:600;">📷 Şəkil</button>
+                </div>
+                <div id="editBlogContent" contenteditable="true" style="padding:20px;min-height:300px;outline:none;font-size:15px;line-height:1.8;font-family:'Segoe UI',sans-serif;"></div>
+            </div>
+        </div>
+
+        <button class="submit-btn" id="blogEditSaveBtn" onclick="saveBlogEdit()">💾 Yadda Saxla</button>
+    </div>
+</div>
 
 </body>
 </html>
