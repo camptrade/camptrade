@@ -268,10 +268,11 @@
         <img src="images/logo.jpeg" alt="CampTrade">
         <h2>Admin Panel</h2>
         <p>CampTrade idarəetmə sistemi</p>
+        <input type="email" id="emailInput" placeholder="E-poçt">
         <input type="password" id="passwordInput" placeholder="Şifrəni daxil et"
                onkeypress="if(event.key==='Enter') login()">
         <button class="login-btn" onclick="login()">Daxil Ol</button>
-        <p class="error-msg" id="errorMsg">❌ Şifrə səhvdir!</p>
+        <p class="error-msg" id="errorMsg"> ❌ E-poçt və ya şifrə səhvdir! </p>
     </div>
 </div>
 
@@ -545,10 +546,13 @@
 </div>
 
 <script>
-    var ADMIN_PASSWORD = "camptrade2026";
     var SUPABASE_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
     var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
     var IMGBB_KEY = "1a08b81b0667fea48665bf27e5b35541";
+
+    var AUTH_TOKEN = SUPABASE_KEY;   // giriş etməyibsə, ziyarətçi açarı
+    var REFRESH_TOKEN = '';
+    var refreshTimer = null;
 
     // Stores File objects in order for new product
     var orderedFiles = [];
@@ -560,20 +564,60 @@
     var editingId = '';
     var editingCategory = '';
 
-    function login() {
+    async function login() {
+        var email = document.getElementById('emailInput').value.trim();
         var pass = document.getElementById('passwordInput').value;
-        if (pass === ADMIN_PASSWORD) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-        } else {
-            document.getElementById('errorMsg').style.display = 'block';
+        var errorMsg = document.getElementById('errorMsg');
+        errorMsg.style.display = 'none';
+
+        try {
+            var res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+                method: 'POST',
+                headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: pass })
+            });
+            var data = await res.json();
+
+            if (res.ok && data.access_token) {
+                AUTH_TOKEN = data.access_token;
+                REFRESH_TOKEN = data.refresh_token;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                startTokenRefresh();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        } catch (e) {
+            errorMsg.style.display = 'block';
         }
     }
 
+    function startTokenRefresh() {
+        clearInterval(refreshTimer);
+        refreshTimer = setInterval(async function() {
+            try {
+                var res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refresh_token: REFRESH_TOKEN })
+                });
+                var data = await res.json();
+                if (res.ok && data.access_token) {
+                    AUTH_TOKEN = data.access_token;
+                    REFRESH_TOKEN = data.refresh_token;
+                }
+            } catch (e) {}
+        }, 50 * 60 * 1000);
+    }
+
     function logout() {
+        clearInterval(refreshTimer);
+        AUTH_TOKEN = SUPABASE_KEY;
+        REFRESH_TOKEN = '';
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('adminPanel').style.display = 'none';
         document.getElementById('passwordInput').value = '';
+        document.getElementById('emailInput').value = '';
     }
 
     function showTab(tab, btn) {
@@ -921,7 +965,7 @@
                 method: 'POST',
                 headers: {
                     'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + AUTH_TOKEN,
                     'Content-Type': 'application/json',
                     'Prefer': 'return=minimal'
                 },
@@ -997,7 +1041,7 @@
                 method: 'POST',
                 headers: {
                     'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + AUTH_TOKEN,
                     'Content-Type': 'application/json',
                     'Prefer': 'return=minimal'
                 },
@@ -1043,7 +1087,7 @@
             var res = await fetch(SUPABASE_URL + '/rest/v1/products?kateqoriya=eq.' + category + '&order=created_at.desc', {
                 headers: {
                     'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY
+                    'Authorization': 'Bearer ' + AUTH_TOKEN
                 }
             });
             var products = await res.json();
@@ -1076,7 +1120,7 @@
         if (!confirm('Bu məhsulu silmək istəyirsiniz?')) return;
         var res = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + id, {
             method: 'DELETE',
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + AUTH_TOKEN }
         });
         if (res.ok) loadList(category);
         else alert('❌ Silmə zamanı xəta');
@@ -1090,7 +1134,7 @@
         editNewFiles = [];
 
         var res = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + id, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + AUTH_TOKEN }
         });
         var data = await res.json();
         var p = data[0];
@@ -1144,7 +1188,7 @@
                 method: 'PATCH',
                 headers: {
                     'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + AUTH_TOKEN,
                     'Content-Type': 'application/json',
                     'Prefer': 'return=minimal'
                 },
@@ -1185,7 +1229,7 @@
             var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?order=created_at.desc', {
                 headers: {
                     'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY
+                    'Authorization': 'Bearer ' + AUTH_TOKEN
                 }
             });
             var blogs = await res.json();
@@ -1215,7 +1259,7 @@
         if (!confirm('Bu blogu silmək istəyirsiniz?')) return;
         var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?id=eq.' + id, {
             method: 'DELETE',
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + AUTH_TOKEN }
         });
         if (res.ok) loadBlogList();
         else alert('❌ Silmə zamanı xəta');
@@ -1227,7 +1271,7 @@
         editingBlogId = id;
 
         var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?id=eq.' + id, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + AUTH_TOKEN }
         });
         var data = await res.json();
         var b = data[0];
@@ -1279,7 +1323,7 @@
                 method: 'PATCH',
                 headers: {
                     'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + AUTH_TOKEN,
                     'Content-Type': 'application/json',
                     'Prefer': 'return=minimal'
                 },
