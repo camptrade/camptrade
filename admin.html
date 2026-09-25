@@ -548,7 +548,6 @@
 <script>
     var SUPABASE_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
     var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
-    var IMGBB_KEY = "1a08b81b0667fea48665bf27e5b35541";
 
     var AUTH_TOKEN = SUPABASE_KEY;   // giriş etməyibsə, ziyarətçi açarı
     var REFRESH_TOKEN = '';
@@ -848,7 +847,7 @@
         btn.disabled = true;
 
         try {
-            var url = await uploadToImgBB(file);
+            var url = await uploadImage(file);
             if (!url) {
                 alert('❌ Şəkil yüklənmədi');
                 btn.innerHTML = originalText;
@@ -888,7 +887,7 @@
         btn.disabled = true;
 
         try {
-            var url = await uploadToImgBB(file);
+            var url = await uploadImage(file);
             if (!url) {
                 alert('❌ Şəkil yüklənmədi');
                 btn.innerHTML = originalText;
@@ -920,15 +919,22 @@
 
     // ============ IMGBB UPLOAD ============
 
-    async function uploadToImgBB(file) {
-        var formData = new FormData();
-        formData.append('image', file);
-        var res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_KEY, {
-            method: 'POST',
-            body: formData
-        });
-        var data = await res.json();
-        return data.success ? data.data.url : null;
+    async function uploadImage(file) {
+    var fileName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+    var res = await fetch(SUPABASE_URL + '/storage/v1/object/images/' + fileName, {
+        method: 'POST',
+        headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + AUTH_TOKEN,
+            'Content-Type': file.type,
+            'x-upsert': 'true'
+        },
+        body: file
+    });
+    if (res.ok) {
+        return SUPABASE_URL + '/storage/v1/object/public/images/' + fileName;
+    }
+    return null;
     }
 
     // ============ ADD PRODUCT ============
@@ -957,7 +963,7 @@
         try {
             var imageUrls = [];
             for (var i = 0; i < orderedFiles.length; i++) {
-                var url = await uploadToImgBB(orderedFiles[i]);
+                var url = await uploadImage(orderedFiles[i]);
                 if (url) imageUrls.push(url);
             }
 
@@ -1031,7 +1037,7 @@
 
         try {
             if (photoFile) {
-                var url = await uploadToImgBB(photoFile);
+                var url = await uploadImage(photoFile);
                 if (url) finalImageUrl = url;
             } else if (photoUrl) {
                 finalImageUrl = photoUrl;
@@ -1178,7 +1184,7 @@
         try {
             var newUrls = [];
             for (var i = 0; i < editNewFiles.length; i++) {
-                var url = await uploadToImgBB(editNewFiles[i]);
+                var url = await uploadImage(editNewFiles[i]);
                 if (url) newUrls.push(url);
             }
 
@@ -1313,7 +1319,7 @@
 
         try {
             if (newPhoto) {
-                var url = await uploadToImgBB(newPhoto);
+                var url = await uploadImage(newPhoto);
                 if (url) finalImg = url;
             } else if (photoUrl) {
                 finalImg = photoUrl;
