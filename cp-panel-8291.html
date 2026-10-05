@@ -546,6 +546,30 @@
 </div>
 
 <script>
+
+    // Admin səhifəsi yüklənən kimi işə düşür
+    async function checkAdminAccess() {
+    // 1. Supabase-dən daxil olan istifadəçini yoxlayırıq
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    // 2. Əgər istifadəçi giriş etməyibsə və ya xəta varsa
+    if (error || !user) {
+        // İstifadəçini anında ana səhifəyə yönləndiririk
+        window.location.href = "/";
+        return;
+    }
+
+    // 3. Əgər xüsusi admin e-poçtunuz varsa, onu da yoxlaya bilərsiniz:
+    if (user.email !== "elmira.krmva@gmail.com") {
+        alert("Bu səhifəyə giriş icazəniz yoxdur!");
+        window.location.href = "/";
+    }
+    }
+
+    // Səhifə yüklənən kimi funksiyanı çağırırıq
+    checkAdminAccess();
+
+
     var SUPABASE_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
     var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
 
