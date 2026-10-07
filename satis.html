@@ -1,420 +1,114 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <title>CampTrade - Satılıq Məhsullar</title>
-    <link rel="stylesheet" href="css/shared.css">
-    <style>
-        .page-hero {
-            background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
-            color: white;
-            padding: 50px 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .page-hero svg { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0.07; pointer-events:none; }
-        .page-hero-content { position: relative; z-index: 2; }
-        .page-hero h1 { font-size: 36px; margin-bottom: 10px; }
-        .page-hero p { opacity: 0.8; font-size: 16px; }
-
-        .products-section { padding: 50px 40px; max-width: 1200px; margin: 0 auto; }
-
-        .empty-state { text-align: center; padding: 80px 20px; color: #888; }
-        .empty-state .icon { font-size: 80px; margin-bottom: 20px; }
-        .empty-state h3 { font-size: 24px; color: #555; margin-bottom: 10px; }
-        .empty-state p { font-size: 16px; }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .product-card img { width: 100%; height: 220px; object-fit: cover; }
-        .product-info { padding: 20px; }
-        .product-info h3 { font-size: 18px; color: #2d5a1b; margin-bottom: 8px; }
-        .product-price { font-size: 24px; font-weight: 700; color: #f5a623; margin-bottom: 8px; }
-        .product-desc {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 12px;
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            white-space: pre-line;
-        }
-        .product-condition {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2d5a1b;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .contact-btn {
-            display: block;
-            background: #25D366;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-top: 12px;
-            transition: opacity 0.3s;
-            font-size: 15px;
-        }
-        .contact-btn:hover { opacity: 0.85; }
-        .loading { text-align: center; padding: 60px; font-size: 18px; color: #888; }
-
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .popup-box {
-            max-width: 680px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 12px; right: 12px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            border: none;
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .slider-wrapper {
-            position: relative;
-            background: #f5f5f5;
-            height: 420px;
-            overflow: hidden;
-        }
-
-        .slider-track {
-            display: flex;
-            height: 100%;
-            transition: transform 0.35s ease;
-        }
-
-        .slider-track img {
-            min-width: 100%;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            flex-shrink: 0;
-            background: #f5f5f5;
-        }
-
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.88);
-            border: none;
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 5;
-        }
-
-        .slider-btn.prev { left: 10px; }
-        .slider-btn.next { right: 10px; }
-
-        .slider-dots {
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 7px;
-        }
-
-        .dot {
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dot.active { background: white; }
-
-        .popup-info { padding: 22px; }
-        .popup-info h2 { font-size: 22px; color: #2d5a1b; margin-bottom: 8px; }
-        .popup-price { font-size: 26px; font-weight: 700; color: #f5a623; margin-bottom: 10px; }
-        .popup-condition {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2d5a1b;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        .popup-desc { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 20px; }
-        .popup-wa {
-            display: block;
-            background: #25D366;
-            color: white;
-            text-align: center;
-            padding: 14px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        @media (max-width: 768px) {
-            .products-section { padding: 30px 15px; }
-            .products-grid { grid-template-columns: 1fr; }
-            .slider-wrapper { height: 260px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<title>CampTrade - Satılıq Məhsullar</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.page-hero{background:linear-gradient(135deg,#2d5a1b,#1a3a0a);color:#fff;padding:45px 20px;text-align:center}
+.page-hero h1{font-size:34px;margin-bottom:8px}.page-hero p{opacity:.8}
+.toolbar{max-width:1200px;margin:25px auto 0;padding:0 20px}
+.search{width:100%;padding:14px 18px;border:2px solid #ddd;border-radius:12px;font-size:16px;outline:none;font-family:inherit}
+.search:focus{border-color:#2d5a1b}
+.chips{display:flex;gap:10px;overflow-x:auto;padding:16px 0 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;background:#fff;border:2px solid #e0e0e0;color:#444;padding:9px 16px;border-radius:25px;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;transition:.2s}
+.chip small{opacity:.6;margin-left:4px}
+.chip:hover{border-color:#2d5a1b}
+.chip.active{background:#2d5a1b;border-color:#2d5a1b;color:#fff}
+.count{max-width:1200px;margin:10px auto 0;padding:0 20px;color:#888;font-size:14px}
+.grid{max-width:1200px;margin:15px auto 50px;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.card{background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 3px 15px rgba(0,0,0,.08);transition:.3s;text-decoration:none;color:inherit;display:block}
+.card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,.15)}
+.card .im{position:relative;height:210px;background:#eee}
+.card img{width:100%;height:100%;object-fit:cover}
+.card .tag{position:absolute;top:10px;left:10px;background:rgba(26,58,10,.85);color:#fff;font-size:12px;padding:4px 10px;border-radius:20px}
+.card .in{padding:16px}
+.card h3{font-size:16px;color:#222;margin-bottom:6px;line-height:1.4;min-height:44px}
+.card .pr{font-size:22px;font-weight:700;color:#f5a623}
+.card .cd{font-size:12px;color:#2d5a1b;font-weight:600;margin-top:4px}
+.msg{grid-column:1/-1;text-align:center;padding:60px 20px;color:#888;font-size:17px}
+@media(max-width:768px){.grid{grid-template-columns:1fr 1fr;gap:12px;padding:0 12px}.card .im{height:150px}.card h3{font-size:14px;min-height:40px}.card .pr{font-size:18px}}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-
 <header>
-    <a href="index.html" class="logo">
-        <img src="images/logo.jpeg" alt="CampTrade Logo">
-    </a>
-    <nav>
-        <a href="index.html">Ana Səhifə</a>
-        <a href="satis.html">Satılıq</a>
-        <a href="kiraye.html">Kirayə</a>
-        <a href="sat.html">Məhsul Sat</a>
-        <a href="blog.html">Blog</a>
-        <a href="elaqe.html">Əlaqə</a>
-    </nav>
-    <div class="lang-switcher">
-        <button class="lang-btn active">🇦🇿</button>
-        <button class="lang-btn">🇬🇧</button>
-        <button class="lang-btn">🇷🇺</button>
-    </div>
+  <a href="index.html" class="logo"><img src="images/logo.jpeg" alt="CampTrade Logo"></a>
+  <nav>
+    <a href="index.html">Ana Səhifə</a><a href="satis.html">Satılıq</a><a href="kiraye.html">Kirayə</a>
+    <a href="sat.html">Məhsul Sat</a><a href="blog.html">Blog</a><a href="elaqe.html">Əlaqə</a>
+  </nav>
+  <div class="lang-switcher"><button class="lang-btn active">🇦🇿</button><button class="lang-btn">🇬🇧</button><button class="lang-btn">🇷🇺</button></div>
 </header>
 
-<div class="page-hero">
-    <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice">
-        <polygon points="-50,300 150,100 300,200 500,30 700,160 900,20 1100,180 1300,70 1490,130 1490,300" fill="white"/>
-    </svg>
-    <div class="page-hero-content">
-        <h1>🛒 Satılıq Məhsullar</h1>
-        <p>Outdoor avadanlıqları - yeni və ikinci əl</p>
-    </div>
-</div>
+<div class="page-hero"><h1 id="pageTitle">🛒 Satılıq Məhsullar</h1><p>Outdoor avadanlıqları - yeni və ikinci əl</p></div>
 
-<div class="products-section">
-    <div class="loading" id="loading">⏳ Məhsullar yüklənir...</div>
-    <div class="products-grid" id="productsGrid" style="display:none"></div>
-    <div class="empty-state" id="emptyState" style="display:none">
-        <div class="icon">🏕️</div>
-        <h3>Tezliklə məhsullar əlavə olunacaq!</h3>
-        <p>Hal-hazırda satılıq məhsul yoxdur.</p>
-    </div>
+<div class="toolbar">
+  <input class="search" id="q" placeholder="🔍 Məhsul axtar...">
+  <div class="chips" id="chips"></div>
 </div>
-
-<div class="popup-overlay" id="popup">
-    <div class="popup-box">
-        <button class="popup-close" onclick="closePopup()">✕</button>
-        <div class="slider-wrapper" id="sliderWrapper">
-            <div class="slider-track" id="sliderTrack"></div>
-            <button class="slider-btn prev" id="prevBtn" onclick="slide(-1)">‹</button>
-            <button class="slider-btn next" id="nextBtn" onclick="slide(1)">›</button>
-            <div class="slider-dots" id="sliderDots"></div>
-        </div>
-        <div class="popup-info">
-            <h2 id="pTitle"></h2>
-            <div class="popup-price" id="pPrice"></div>
-            <span class="popup-condition" id="pCondition"></span>
-            <p class="popup-desc" id="pDesc"></p>
-            <a class="popup-wa" id="pWa" href="#" target="_blank">💬 WhatsApp ilə Əlaqə</a>
-        </div>
-    </div>
-</div>
+<div class="count" id="count"></div>
+<div class="grid" id="grid"><div class="msg">⏳ Məhsullar yüklənir...</div></div>
 
 <footer>
-    <div class="footer-logo">
-        <img src="images/logo.jpeg" alt="CampTrade">
-    </div>
-    <div class="social-links">
-        <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
-        <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
-    </div>
-    <p>© 2026 CampTrade. All rights reserved.</p>
+  <div class="footer-logo"><img src="images/logo.jpeg" alt="CampTrade"></div>
+  <div class="social-links">
+    <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
+    <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
+  </div>
+  <p>© 2026 CampTrade. All rights reserved.</p>
 </footer>
 
 <script>
-var SUPABASE_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+var SUPABASE_URL="https://iupwahtmnybxrowbkcfs.supabase.co";
+var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+var CAT='satis', TITLE='🛒 Satılıq Məhsullar';
+var DEFAULT_SUB='Digər';
+var all=[], active=new URLSearchParams(location.search).get('c')||'all';
 
-var curSlide = 0;
-var totalSlides = 0;
-var allProducts = [];
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function sub(p){return p.alt_kateqoriya||DEFAULT_SUB}
 
-function loadProducts() {
-    fetch(SUPABASE_URL + '/rest/v1/products?kateqoriya=eq.satis&order=created_at.desc', {
-        headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-        }
-    })
-    .then(function(res) { return res.json(); })
-    .then(function(products) {
-        document.getElementById('loading').style.display = 'none';
+document.getElementById('pageTitle').textContent=TITLE;
 
-        if (!products || products.length === 0) {
-            document.getElementById('emptyState').style.display = 'block';
-            return;
-        }
+fetch(SUPABASE_URL+'/rest/v1/products?kateqoriya=eq.'+CAT+'&order=created_at.desc',
+  {headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}})
+.then(function(r){return r.json()})
+.then(function(d){all=Array.isArray(d)?d:[];buildChips();render()})
+.catch(function(){document.getElementById('grid').innerHTML='<div class="msg">❌ Yüklənmə xətası</div>'});
 
-        allProducts = products;
-        var grid = document.getElementById('productsGrid');
-        grid.style.display = 'grid';
-
-        products.forEach(function(p, index) {
-            var imgs = p.sekiller ? p.sekiller.split(',') : [];
-            var firstImg = imgs.length > 0 ? imgs[0].trim() : 'images/logo.jpeg';
-
-            var card = document.createElement('div');
-            card.className = 'product-card';
-            card.setAttribute('data-index', index);
-
-            card.innerHTML =
-                '<img src="' + firstImg + '" alt="' + p.ad + '" onerror="this.src=\'images/logo.jpeg\'">' +
-                '<div class="product-info">' +
-                    '<h3>' + p.ad + '</h3>' +
-                    '<div class="product-price">' + p.qiymet + ' AZN</div>' +
-                    '<span class="product-condition">' + (p.veziyyet || 'Yeni') + '</span>' +
-                    '<p class="product-desc">' + p.melumat.replace(/\n/g, '<br>') + '</p>' +
-                    '<a href="https://wa.me/' + p.whatsapp + '" class="contact-btn" target="_blank">💬 WhatsApp ilə Əlaqə</a>' +
-                '</div>';
-
-            card.addEventListener('click', function(e) {
-                if (e.target.classList.contains('contact-btn')) return;
-                openPopup(index);
-            });
-
-            grid.appendChild(card);
-        });
-    })
-    .catch(function() {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('emptyState').style.display = 'block';
-    });
+function buildChips(){
+  var counts={};all.forEach(function(p){counts[sub(p)]=(counts[sub(p)]||0)+1});
+  var h='<button class="chip" data-c="all">🌿 Hamısı<small>'+all.length+'</small></button>';
+  Object.keys(counts).sort().forEach(function(k){
+    h+='<button class="chip" data-c="'+esc(k)+'">'+esc(k)+'<small>'+counts[k]+'</small></button>';
+  });
+  var box=document.getElementById('chips');box.innerHTML=h;
+  if(!counts[active])active='all';
+  box.onclick=function(e){var b=e.target.closest('.chip');if(!b)return;active=b.getAttribute('data-c');render()};
 }
 
-function openPopup(index) {
-    var p = allProducts[index];
-    var imgs = p.sekiller ? p.sekiller.split(',').filter(function(x) { return x.trim(); }) : [];
-    totalSlides = imgs.length || 1;
-    curSlide = 0;
-
-    var track = document.getElementById('sliderTrack');
-    track.innerHTML = '';
-    track.style.transition = 'none';
-    track.style.transform = 'translateX(0)';
-
-    if (imgs.length === 0) {
-        var img = document.createElement('img');
-        img.src = 'images/logo.jpeg';
-        track.appendChild(img);
-    } else {
-        imgs.forEach(function(src) {
-            var img = document.createElement('img');
-            img.src = src.trim();
-            img.onerror = function() { this.src = 'images/logo.jpeg'; };
-            track.appendChild(img);
-        });
-    }
-
-    var dots = document.getElementById('sliderDots');
-    dots.innerHTML = '';
-    if (imgs.length > 1) {
-        imgs.forEach(function(x, i) {
-            var dot = document.createElement('div');
-            dot.className = i === 0 ? 'dot active' : 'dot';
-            dot.setAttribute('data-i', i);
-            dot.onclick = function() { goTo(parseInt(this.getAttribute('data-i'))); };
-            dots.appendChild(dot);
-        });
-    }
-
-    document.getElementById('prevBtn').style.display = imgs.length > 1 ? 'block' : 'none';
-    document.getElementById('nextBtn').style.display = imgs.length > 1 ? 'block' : 'none';
-
-    document.getElementById('pTitle').textContent = p.ad;
-    document.getElementById('pPrice').textContent = p.qiymet + ' AZN';
-    document.getElementById('pCondition').textContent = p.veziyyet || '';
-    document.getElementById('pDesc').innerHTML = p.melumat.replace(/\n/g, '<br>');
-    document.getElementById('pWa').href = 'https://wa.me/' + p.whatsapp;
-
-    document.getElementById('popup').style.display = 'block';
-    document.body.style.overflow = 'hidden';
+function render(){
+  document.querySelectorAll('.chip').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-c')===active)});
+  var q=document.getElementById('q').value.toLowerCase().trim();
+  var list=all.filter(function(p){
+    return (active==='all'||sub(p)===active)&&(!q||(p.ad+' '+(p.melumat||'')).toLowerCase().indexOf(q)>-1);
+  });
+  document.getElementById('count').textContent=list.length+' məhsul tapıldı';
+  var g=document.getElementById('grid');
+  if(!list.length){g.innerHTML='<div class="msg">📭 Bu kateqoriyada məhsul yoxdur</div>';return}
+  g.innerHTML=list.map(function(p){
+    var img=(p.sekiller||'').split(',')[0].trim()||'images/logo.jpeg';
+    return '<a class="card" href="product.html?id='+encodeURIComponent(p.id)+'">'+
+      '<div class="im"><img src="'+esc(img)+'" alt="'+esc(p.ad)+'" loading="lazy" onerror="this.src=\'images/logo.jpeg\'"><span class="tag">'+esc(sub(p))+'</span></div>'+
+      '<div class="in"><h3>'+esc(p.ad)+'</h3><div class="pr">'+esc(p.qiymet)+' AZN</div>'+
+      '<div class="cd">'+esc(p.veziyyet||'')+'</div></div></a>';
+  }).join('');
 }
-
-function closePopup() {
-    document.getElementById('popup').style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-function slide(dir) {
-    curSlide = (curSlide + dir + totalSlides) % totalSlides;
-    goTo(curSlide);
-}
-
-function goTo(index) {
-    curSlide = index;
-    var wrapper = document.getElementById('sliderWrapper');
-    var track = document.getElementById('sliderTrack');
-    track.style.transition = 'transform 0.35s ease';
-    track.style.transform = 'translateX(-' + (index * wrapper.offsetWidth) + 'px)';
-
-    var dots = document.querySelectorAll('.dot');
-    dots.forEach(function(d, i) {
-        d.className = i === index ? 'dot active' : 'dot';
-    });
-}
-
-document.getElementById('popup').addEventListener('click', function(e) {
-    if (e.target === this) closePopup();
-});
-
-loadProducts();
+document.getElementById('q').addEventListener('input',render);
 </script>
-
 </body>
 </html>

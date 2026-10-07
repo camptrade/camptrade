@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<title>CampTrade - Məhsul</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.wrap{max-width:1150px;margin:25px auto 50px;padding:0 20px}
+.crumb{font-size:14px;color:#888;margin-bottom:18px}.crumb a{color:#2d5a1b;text-decoration:none;font-weight:600}
+.layout{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:start}
+.gal{background:#fff;border-radius:20px;padding:14px;box-shadow:0 3px 15px rgba(0,0,0,.08)}
+.main{position:relative;height:480px;background:#f3f3f3;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.main img{max-width:100%;max-height:100%;object-fit:contain}
+.nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);border:none;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer}
+.nav.l{left:10px}.nav.r{right:10px}
+.thumbs{display:flex;gap:10px;margin-top:12px;overflow-x:auto}
+.thumbs img{width:74px;height:74px;object-fit:cover;border-radius:10px;border:3px solid transparent;cursor:pointer;opacity:.7;flex:none}
+.thumbs img.on{border-color:#2d5a1b;opacity:1}
+.info{background:#fff;border-radius:20px;padding:30px;box-shadow:0 3px 15px rgba(0,0,0,.08)}
+.info h1{font-size:28px;color:#1f2d3d;margin-bottom:14px;line-height:1.3}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.b{padding:5px 12px;border-radius:6px;font-size:13px;font-weight:700;color:#fff;background:#2d5a1b}
+.b.o{background:#f5a623}.b.g{background:#e8f5e9;color:#2d5a1b}
+.price{background:#f8f9fb;border-radius:16px;padding:22px;text-align:center;margin-bottom:22px}
+.price small{display:block;color:#888;margin-bottom:4px}.price b{font-size:44px;color:#f5a623}
+.desc-t{font-weight:700;color:#2d5a1b;margin-bottom:8px}
+.desc{color:#555;line-height:1.8;font-size:15px;margin-bottom:24px;white-space:pre-line}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn2{padding:15px;border-radius:10px;text-align:center;text-decoration:none;font-weight:700;font-size:16px;border:2px solid #2d5a1b;color:#2d5a1b;background:#fff;cursor:pointer;font-family:inherit}
+.btn2.wa{background:#25D366;border-color:#25D366;color:#fff}
+.btn2:hover{opacity:.85}
+.share{margin-top:12px;width:100%}
+.rel h2{color:#2d5a1b;margin:40px 0 16px}
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.rg a{background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.rg img{width:100%;height:150px;object-fit:cover}
+.rg div{padding:12px;font-size:14px}.rg b{color:#f5a623;display:block;margin-top:4px;font-size:17px}
+.state{text-align:center;padding:90px 20px;color:#888;font-size:18px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.main{height:320px}.acts{grid-template-columns:1fr}.info h1{font-size:23px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo"><img src="images/logo.jpeg" alt="CampTrade Logo"></a>
+  <nav>
+    <a href="index.html">Ana Səhifə</a><a href="satis.html">Satılıq</a><a href="kiraye.html">Kirayə</a>
+    <a href="sat.html">Məhsul Sat</a><a href="blog.html">Blog</a><a href="elaqe.html">Əlaqə</a>
+  </nav>
+  <div class="lang-switcher"><button class="lang-btn active">🇦🇿</button><button class="lang-btn">🇬🇧</button><button class="lang-btn">🇷🇺</button></div>
+</header>
+
+<div class="wrap" id="root"><div class="state">⏳ Yüklənir...</div></div>
+
+<footer>
+  <div class="footer-logo"><img src="images/logo.jpeg" alt="CampTrade"></div>
+  <div class="social-links">
+    <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
+    <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
+  </div>
+  <p>© 2026 CampTrade. All rights reserved.</p>
+</footer>
+
+<script>
+var SUPABASE_URL="https://iupwahtmnybxrowbkcfs.supabase.co";
+var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+var H={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY};
+var root=document.getElementById('root'), imgs=[], cur=0;
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function api(q){return fetch(SUPABASE_URL+'/rest/v1/products?'+q,{headers:H}).then(function(r){return r.json()})}
+
+var id=new URLSearchParams(location.search).get('id');
+if(!id){root.innerHTML='<div class="state">Məhsul tapılmadı</div>'}
+else api('id=eq.'+encodeURIComponent(id)).then(function(d){
+  if(!d||!d[0]){root.innerHTML='<div class="state">😕 Məhsul tapılmadı və ya satılıb.<br><br><a href="satis.html">← Məhsullara qayıt</a></div>';return}
+  show(d[0]);
+}).catch(function(){root.innerHTML='<div class="state">❌ Xəta baş verdi</div>'});
+
+function show(p){
+  document.title=p.ad+' - CampTrade';
+  imgs=(p.sekiller||'').split(',').map(function(x){return x.trim()}).filter(Boolean);
+  if(!imgs.length)imgs=['images/logo.jpeg'];
+  var isRent=p.kateqoriya==='kiraye', sub=p.alt_kateqoriya||'Digər';
+  var num=String(p.whatsapp||'').replace(/\D/g,'');
+  var msg=encodeURIComponent('Salam! CampTrade-dəki "'+p.ad+'" ('+p.qiymet+' AZN) məhsulu ilə maraqlanıram: '+location.href);
+  var listPage=isRent?'kiraye.html':'satis.html';
+
+  root.innerHTML=
+   '<div class="crumb"><a href="index.html">Ana Səhifə</a> / <a href="'+listPage+'">'+(isRent?'Kirayə':'Satılıq')+'</a> / '+esc(sub)+'</div>'+
+   '<div class="layout">'+
+    '<div class="gal"><div class="main"><img id="big" src="'+esc(imgs[0])+'" alt="'+esc(p.ad)+'">'+
+      (imgs.length>1?'<button class="nav l" onclick="go(-1)">‹</button><button class="nav r" onclick="go(1)">›</button>':'')+'</div>'+
+      (imgs.length>1?'<div class="thumbs" id="th">'+imgs.map(function(s,i){return '<img src="'+esc(s)+'" class="'+(i?'':'on')+'" onclick="set('+i+')">'}).join('')+'</div>':'')+
+    '</div>'+
+    '<div class="info"><h1>'+esc(p.ad)+'</h1>'+
+      '<div class="badges"><span class="b">'+(isRent?'Kirayə':'Satılıq')+' / '+esc(sub)+'</span>'+
+      (p.veziyyet&&!isRent?'<span class="b o">'+esc(p.veziyyet)+'</span>':'')+'<span class="b g">✔ Mövcuddur</span></div>'+
+      '<div class="price"><small>'+(isRent?'Kirayə qiyməti':'Qiymət')+'</small><b>'+esc(p.qiymet)+' ₼</b></div>'+
+      '<div class="desc-t">📋 Məhsul haqqında</div><div class="desc">'+esc(p.melumat)+'</div>'+
+      '<div class="acts"><a class="btn2 wa" target="_blank" href="https://wa.me/'+num+'?text='+msg+'">💬 WhatsApp</a>'+
+      '<a class="btn2" href="tel:+'+num+'">📞 Zəng et</a></div>'+
+      '<button class="btn2 share" onclick="share()">🔗 Paylaş</button>'+
+    '</div></div>'+
+   '<div class="rel" id="rel"></div>';
+
+  api('kateqoriya=eq.'+p.kateqoriya+'&id=neq.'+p.id+'&alt_kateqoriya=eq.'+encodeURIComponent(sub)+'&order=created_at.desc&limit=4').then(function(r){
+    if(!r||!r.length||!Array.isArray(r))return;
+    document.getElementById('rel').innerHTML='<h2>Oxşar məhsullar</h2><div class="rg">'+r.map(function(x){
+      var im=(x.sekiller||'').split(',')[0].trim()||'images/logo.jpeg';
+      return '<a href="product.html?id='+encodeURIComponent(x.id)+'"><img src="'+esc(im)+'" onerror="this.src=\'images/logo.jpeg\'"><div>'+esc(x.ad)+'<b>'+esc(x.qiymet)+' AZN</b></div></a>'}).join('')+'</div>';
+  });
+}
+function set(i){cur=i;document.getElementById('big').src=imgs[i];
+  document.querySelectorAll('#th img').forEach(function(t,k){t.classList.toggle('on',k===i)})}
+function go(d){set((cur+d+imgs.length)%imgs.length)}
+function share(){
+  if(navigator.share)navigator.share({title:document.title,url:location.href});
+  else if(navigator.clipboard){navigator.clipboard.writeText(location.href);alert('Link kopyalandı ✅')}
+}
+</script>
+</body>
+</html>
