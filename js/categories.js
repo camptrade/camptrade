@@ -29,6 +29,10 @@ var CATEGORIES = {
     "Polar gödəkçə",
     "Yağmurluq"
   ],
+  "Parakord bilərzik": [
+    "Maqnezium daşlı",
+    "Sadə"
+  ],
   "Digər": [
     "Digər"
   ]
