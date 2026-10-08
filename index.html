@@ -251,7 +251,49 @@
 
         .blog-more:hover { background: #f5a623; }
 
-        footer { background: #1a3a0a; color: white; padding: 40px; text-align: center; }
+        /* ===== YENİ: KATEQORİYALAR + YENİ MƏHSULLAR ===== */
+body { overflow-x: clip; }
+.shop { padding: 60px 20px 20px; text-align: center; max-width: 1200px; margin: 0 auto; }
+.shop h2 { font-size: 32px; color: #2d5a1b; margin-bottom: 8px; }
+.shop > p { color: #666; margin-bottom: 30px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-bottom: 55px; }
+.tile { position: relative; overflow: hidden; border-radius: 18px; padding: 24px 20px; color: white; text-decoration: none; text-align: left; min-height: 140px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(135deg,#2d5a1b,#1a3a0a); transition: transform .3s, box-shadow .3s; }
+.tile:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,.25); }
+.tile:nth-child(2) { background: linear-gradient(135deg,#f5a623,#d9820a); }
+.tile:nth-child(3) { background: linear-gradient(135deg,#3b7a57,#1f4d36); }
+.tile:nth-child(4) { background: linear-gradient(135deg,#555,#2b2b2b); }
+.tile .ti { position: absolute; top: 14px; right: 16px; font-size: 46px; font-style: normal; }
+.tile b { font-size: 19px; display: block; }
+.tile span { font-size: 13px; opacity: .85; }
+.fresh-wrap { position: relative; max-width: 1200px; margin: 0 auto 30px; }
+.fresh-row { display: flex; gap: 18px; overflow-x: auto; padding: 6px 4px 18px; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: #2d5a1b #e5e5e5; }
+.fresh-card { flex: none; width: 230px; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 3px 15px rgba(0,0,0,.08); text-decoration: none; color: inherit; text-align: left; scroll-snap-align: start; transition: transform .3s; }
+.fresh-card:hover { transform: translateY(-5px); }
+.fim { position: relative; height: 170px; background: #eee; }
+.fim img { width: 100%; height: 100%; object-fit: cover; }
+.fnew { position: absolute; top: 10px; left: 10px; background: #f5a623; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+.fin { padding: 14px; }
+.fin h4 { font-size: 15px; color: #222; line-height: 1.4; min-height: 42px; font-weight: 600; margin-bottom: 6px; }
+.fin b { font-size: 20px; color: #f5a623; }
+.fin small { font-size: 12px; color: #888; font-weight: 400; }
+.fr-btn { position: absolute; top: 40%; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; border: none; background: white; box-shadow: 0 3px 12px rgba(0,0,0,.25); font-size: 24px; cursor: pointer; z-index: 3; color: #2d5a1b; }
+.fr-btn.l { left: -14px; }
+.fr-btn.r { right: -14px; }
+.fresh-load { padding: 40px; color: #888; width: 100%; }
+.shop-blog { display: block; margin-top: 28px; color: #2d5a1b; font-weight: 600; text-decoration: none; }
+@media (max-width: 768px) {
+    .shop { padding: 40px 15px 10px; }
+    .shop h2 { font-size: 24px; }
+    .fr-btn { display: none; }
+    .fresh-card { width: 170px; }
+    .fim { height: 130px; }
+    .tiles { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .tile { min-height: 120px; padding: 18px 14px; }
+    .tile .ti { font-size: 34px; }
+    .tile b { font-size: 16px; }
+}
+
+footer { background: #1a3a0a; color: white; padding: 40px; text-align: center; }
         .footer-logo img {
             height: 60px;
             width: 60px;
@@ -415,33 +457,24 @@
     </div>
 </section>
 
-<!-- KATEQORİYALAR -->
-<section class="categories">
-    <h2 data-az="Nə axtarırsan?" data-en="What are you looking for?" data-ru="Что ищете?">Nə axtarırsan?</h2>
-    <p data-az="İstədiyin kateqoriyanı seç" data-en="Choose your category" data-ru="Выберите категорию">İstədiyin kateqoriyanı seç</p>
-    <div class="cat-grid">
-        <a href="satis.html" class="cat-card">
-            <div class="cat-icon">🛒</div>
-            <h3 data-az="Satılıq Məhsullar" data-en="For Sale" data-ru="Продажа">Satılıq Məhsullar</h3>
-            <p data-az="İkinci əl və yeni outdoor avadanlıqları" data-en="New and used outdoor equipment" data-ru="Новое и б/у снаряжение">İkinci əl və yeni outdoor avadanlıqları</p>
-        </a>
-        <a href="kiraye.html" class="cat-card">
-            <div class="cat-icon">⛺</div>
-            <h3 data-az="Kirayə Məhsullar" data-en="Rental" data-ru="Аренда">Kirayə Məhsullar</h3>
-            <p data-az="Çadır, kamp avadanlıqları kirayəsi" data-en="Tents, camping gear rental" data-ru="Аренда палаток и снаряжения">Çadır, kamp avadanlıqları kirayəsi</p>
-        </a>
-        <a href="sat.html" class="cat-card">
-            <div class="cat-icon">💰</div>
-            <h3 data-az="Sən də Sat" data-en="Sell Yours" data-ru="Продай своё">Sən də Sat</h3>
-            <p data-az="Məhsulunu platformada sat, faiz qazan" data-en="List your gear, earn commission" data-ru="Продай снаряжение, зарабатывай">Məhsulunu platformada sat, faiz qazan</p>
-        </a>
-        <a href="elaqe.html" class="cat-card">
-            <div class="cat-icon">📞</div>
-            <h3 data-az="Əlaqə" data-en="Contact" data-ru="Контакт">Əlaqə</h3>
-            <p data-az="Sualın var? Bizimlə əlaqə saxla" data-en="Have questions? Contact us" data-ru="Есть вопросы? Свяжитесь с нами">Sualın var? Bizimlə əlaqə saxla</p>
-        </a>
+<!-- YENİ: KATEQORİYALAR + YENİ MƏHSULLAR -->
+<section class="shop" id="shopBox">
+    <h2 data-az="Kateqoriyalar" data-en="Categories" data-ru="Категории">Kateqoriyalar</h2>
+    <p data-az="Axtardığın avadanlığı tez tap" data-en="Find the gear you need fast" data-ru="Быстро найдите нужное снаряжение">Axtardığın avadanlığı tez tap</p>
+    <div class="tiles" id="catTiles"></div>
+
+    <h2 data-az="🔥 Yeni əlavə olunanlar" data-en="🔥 Just added" data-ru="🔥 Новинки">🔥 Yeni əlavə olunanlar</h2>
+    <p data-az="Platformaya ən son əlavə edilən avadanlıqlar" data-en="The latest gear on the platform" data-ru="Последнее снаряжение на платформе">Platformaya ən son əlavə edilən avadanlıqlar</p>
+    <div class="fresh-wrap">
+        <button class="fr-btn l" onclick="freshScroll(-1)">‹</button>
+        <div class="fresh-row" id="freshRow"><div class="fresh-load">⏳ Yüklənir...</div></div>
+        <button class="fr-btn r" onclick="freshScroll(1)">›</button>
     </div>
+    <a href="satis.html" class="blog-more" data-az="Bütün məhsullara bax →" data-en="View all products →" data-ru="Все товары →">Bütün məhsullara bax →</a>
+    <a href="blog.html" class="shop-blog">📰 Outdoor məsləhətləri üçün blogumuza baxın →</a>
 </section>
+
+<!-- KATEQORİYALAR -->
 
 <!-- NECƏ İŞLƏYİR -->
 <section class="how-it-works">
@@ -470,57 +503,6 @@
     </div>
 </section>
 
-<!-- BLOG HİSSƏSİ - SON YAZILLAR -->
-<section class="blog-section">
-    <h2 data-az="📰 Son Yazılar" data-en="📰 Latest Posts" data-ru="📰 Последние записи">📰 Son Yazılar</h2>
-    <p data-az="Outdoor dünyasından məlumatlar, tövsiyələr və təcrübələr"
-       data-en="Tips, guides and experiences from the outdoor world"
-       data-ru="Советы, гиды и опыт из мира outdoor">
-       Outdoor dünyasından məlumatlar, tövsiyələr və təcrübələr
-    </p>
-    <div class="blog-grid">
-        <a href="blog.html" class="blog-card">
-            <div class="blog-img">🏕️</div>
-            <div class="blog-info">
-                <span class="blog-tag">Başlanğıc</span>
-                <h3>Kempinqə İlk Dəfə Gedənlər Üçün 10 Tövsiyə</h3>
-                <p>İlk kempinq səfərinizə çıxmazdan əvvəl bilməli olduğunuz ən vacib məlumatlar...</p>
-                <div class="blog-meta">
-                    <span>📅 1 İyun 2026</span>
-                    <span>⏱️ 5 dəq oxu</span>
-                </div>
-            </div>
-        </a>
-        <a href="blog.html" class="blog-card">
-            <div class="blog-img">🎒</div>
-            <div class="blog-info">
-                <span class="blog-tag">Avadanlıq</span>
-                <h3>Ən Yaxşı Kempinq Çantası Necə Seçilir?</h3>
-                <p>Çanta seçərkən nəyə diqqət etmək lazımdır? Həcm, çəki, material müqayisəsi...</p>
-                <div class="blog-meta">
-                    <span>📅 28 May 2026</span>
-                    <span>⏱️ 7 dəq oxu</span>
-                </div>
-            </div>
-        </a>
-        <a href="blog.html" class="blog-card">
-            <div class="blog-img">🏔️</div>
-            <div class="blog-info">
-                <span class="blog-tag">Azərbaycan</span>
-                <h3>Azərbaycanda Ən Gözəl 5 Kempinq Yeri</h3>
-                <p>Şahdağdan Qobustana — ölkəmizdəki ən möhtəşəm outdoor məkanları...</p>
-                <div class="blog-meta">
-                    <span>📅 25 May 2026</span>
-                    <span>⏱️ 6 dəq oxu</span>
-                </div>
-            </div>
-        </a>
-    </div>
-    <a href="blog.html" class="blog-more"
-       data-az="Bütün Yazılara Bax →" data-en="View All Posts →" data-ru="Все записи →">
-       Bütün Yazılara Bax →
-    </a>
-</section>
 
 <!-- FOOTER -->
 <footer>
@@ -534,6 +516,55 @@
     </div>
     <p>© 2026 CampTrade. All rights reserved.</p>
 </footer>
+
+
+
+
+<script src="js/categories.js"></script>
+
+<script>
+var SB_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
+var SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+var TILE_ICONS = {"Camp ləvazimatları":"⛺","Hiking ləvazimatları":"🥾","Geyim":"🧥","Digər":"📦"};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function freshScroll(d){document.getElementById('freshRow').scrollBy({left:d*300,behavior:'smooth'})}
+
+fetch(SB_URL+'/rest/v1/products?order=created_at.desc',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}})
+.then(function(r){return r.json()})
+.then(function(d){
+    if(!Array.isArray(d)||!d.length){document.getElementById('shopBox').style.display='none';return}
+
+    /* Kateqoriya kartları (real məhsul sayı ilə) */
+    var counts={}, rent=0;
+    d.forEach(function(p){
+        if(p.kateqoriya==='kiraye'){rent++;return}
+        var g=mainOf(p.alt_kateqoriya||OTHER);
+        counts[g]=(counts[g]||0)+1;
+    });
+    var t='';
+    Object.keys(CATEGORIES).forEach(function(g){
+        if(!counts[g])return;
+        t+='<a class="tile" href="satis.html?g='+encodeURIComponent(g)+'"><i class="ti">'+(TILE_ICONS[g]||'🏷️')+'</i><b>'+esc(g)+'</b><span>'+counts[g]+' məhsul</span></a>';
+    });
+    if(rent)t+='<a class="tile" href="kiraye.html"><i class="ti">🎒</i><b>Kirayə</b><span>'+rent+' məhsul</span></a>';
+    document.getElementById('catTiles').innerHTML=t;
+
+    /* Ən yeni 10 məhsul */
+    document.getElementById('freshRow').innerHTML=d.slice(0,10).map(function(p){
+        var im=(p.sekiller||'').split(',')[0].trim()||'images/logo.jpeg';
+        var r=p.kateqoriya==='kiraye';
+        return '<a class="fresh-card" href="product.html?id='+encodeURIComponent(p.id)+'">'+
+            '<div class="fim"><img src="'+esc(im)+'" alt="'+esc(p.ad)+'" loading="lazy" onerror="this.src=\'images/logo.jpeg\'"><span class="fnew">'+(r?'Kirayə':esc(p.alt_kateqoriya||'Yeni'))+'</span></div>'+
+            '<div class="fin"><h4>'+esc(p.ad)+'</h4><b>'+esc(p.qiymet)+' AZN'+(r?' <small>/ gün</small>':'')+'</b></div></a>';
+    }).join('');
+})
+.catch(function(){document.getElementById('shopBox').style.display='none'});
+</parameter>
+
+</script>
+
+
 
 <script>
     function setLang(lang, btn) {
