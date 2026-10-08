@@ -38,6 +38,10 @@
 .rg img{width:100%;height:150px;object-fit:cover}
 .rg div{padding:12px;font-size:14px}.rg b{color:#f5a623;display:block;margin-top:4px;font-size:17px}
 .state{text-align:center;padding:90px 20px;color:#888;font-size:18px}
+.layout>*{min-width:0}
+.gal,.info{min-width:0;max-width:100%}
+.info h1,.desc,.crumb{overflow-wrap:anywhere}
+.main{touch-action:pan-y}
 @media(max-width:850px){.layout{grid-template-columns:1fr}.main{height:320px}.acts{grid-template-columns:1fr}.info h1{font-size:23px}}
 </style>
 </head>
@@ -116,6 +120,16 @@ function show(p){
 function set(i){cur=i;document.getElementById('big').src=imgs[i];
   document.querySelectorAll('#th img').forEach(function(t,k){t.classList.toggle('on',k===i)})}
 function go(d){set((cur+d+imgs.length)%imgs.length)}
+
+var sx=0;
+document.addEventListener('touchstart',function(e){
+  if(e.target.closest('.main'))sx=e.touches[0].clientX;
+},{passive:true});
+document.addEventListener('touchend',function(e){
+  if(!sx)return;
+  var dx=e.changedTouches[0].clientX-sx; sx=0;
+  if(Math.abs(dx)>50)go(dx<0?1:-1);
+});
 function share(){
   if(navigator.share)navigator.share({title:document.title,url:location.href});
   else if(navigator.clipboard){navigator.clipboard.writeText(location.href);alert('Link kopyalandı ✅')}

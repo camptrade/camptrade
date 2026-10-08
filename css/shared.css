@@ -225,3 +225,7 @@ footer p { opacity: 0.6; font-size: 13px; margin-top: 15px; }
         font-size: 24px !important;
     }
 }
+
+/* Telefonda yana sürüşməni dayandırır */
+html, body { max-width: 100%; overflow-x: clip; }
+img { max-width: 100%; }
