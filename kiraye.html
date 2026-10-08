@@ -1,399 +1,178 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <title>CampTrade - Kirayə Məhsullar</title>
-    <link rel="stylesheet" href="css/shared.css">
-    <style>
-        .page-hero {
-            background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
-            color: white;
-            padding: 50px 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .page-hero svg { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0.07; pointer-events:none; }
-        .page-hero-content { position: relative; z-index: 2; }
-        .page-hero h1 { font-size: 36px; margin-bottom: 10px; }
-        .page-hero p { opacity: 0.8; font-size: 16px; }
-
-        .products-section { padding: 50px 40px; max-width: 1200px; margin: 0 auto; }
-
-        .empty-state { text-align: center; padding: 80px 20px; color: #888; }
-        .empty-state .icon { font-size: 80px; margin-bottom: 20px; }
-        .empty-state h3 { font-size: 24px; color: #555; margin-bottom: 10px; }
-        .empty-state p { font-size: 16px; }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .product-card img { width: 100%; height: 220px; object-fit: cover; }
-        .product-info { padding: 20px; }
-        .product-info h3 { font-size: 18px; color: #2d5a1b; margin-bottom: 8px; }
-        .product-price { font-size: 24px; font-weight: 700; color: #f5a623; margin-bottom: 8px; }
-        .price-label { font-size: 13px; color: #888; font-weight: normal; }
-        .product-desc {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 12px;
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            white-space: pre-line;
-        }
-        .contact-btn {
-            display: block;
-            background: #25D366;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-top: 12px;
-            transition: opacity 0.3s;
-            font-size: 15px;
-        }
-        .contact-btn:hover { opacity: 0.85; }
-        .loading { text-align: center; padding: 60px; font-size: 18px; color: #888; }
-
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .popup-box {
-            max-width: 680px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 12px; right: 12px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            border: none;
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .slider-wrapper {
-            position: relative;
-            background: #f5f5f5;
-            height: 420px;
-            overflow: hidden;
-        }
-
-        .slider-track {
-            display: flex;
-            height: 100%;
-            transition: transform 0.35s ease;
-        }
-
-        .slider-track img {
-            min-width: 100%;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            flex-shrink: 0;
-            background: #f5f5f5;
-        }
-
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.88);
-            border: none;
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 5;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .slider-btn.prev { left: 10px; }
-        .slider-btn.next { right: 10px; }
-
-        .slider-dots {
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 7px;
-        }
-
-        .dot {
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.25);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dot.active { background: #2d5a1b; }
-
-        .popup-info { padding: 22px; }
-        .popup-info h2 { font-size: 22px; color: #2d5a1b; margin-bottom: 8px; }
-        .popup-price { font-size: 26px; font-weight: 700; color: #f5a623; margin-bottom: 10px; }
-        .popup-desc { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 20px; }
-        .popup-wa {
-            display: block;
-            background: #25D366;
-            color: white;
-            text-align: center;
-            padding: 14px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        @media (max-width: 768px) {
-            .products-section { padding: 30px 15px; }
-            .products-grid { grid-template-columns: 1fr; }
-            .slider-wrapper { height: 300px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<title>CampTrade - Məhsullar</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.page-hero{background:linear-gradient(135deg,#2d5a1b,#1a3a0a);color:#fff;padding:45px 20px;text-align:center}
+.page-hero h1{font-size:34px;margin-bottom:8px}.page-hero p{opacity:.8}
+.toolbar{max-width:1200px;margin:25px auto 0;padding:0 20px}
+.search{width:100%;padding:14px 18px;border:2px solid #ddd;border-radius:12px;font-size:16px;outline:none;font-family:inherit}
+.search:focus{border-color:#2d5a1b}
+.chips{display:flex;gap:10px;overflow-x:auto;padding:14px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;background:#fff;border:2px solid #e0e0e0;color:#444;padding:9px 16px;border-radius:25px;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;transition:.2s}
+.chip small{opacity:.6;margin-left:4px}
+.chip:hover{border-color:#2d5a1b}
+.chip.active{background:#2d5a1b;border-color:#2d5a1b;color:#fff}
+.chips.sub .chip{padding:6px 13px;font-size:13px;background:#f5f5f5}
+.chips.sub .chip.active{background:#f5a623;border-color:#f5a623;color:#fff}
+.count{max-width:1200px;margin:10px auto 0;padding:0 20px;color:#888;font-size:14px}
+.grid{max-width:1200px;margin:15px auto 30px;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.card{background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 3px 15px rgba(0,0,0,.08);transition:.3s;text-decoration:none;color:inherit;display:block}
+.card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,.15)}
+.card .im{position:relative;height:210px;background:#eee}
+.card img{width:100%;height:100%;object-fit:cover}
+.card .tag{position:absolute;top:10px;left:10px;background:rgba(26,58,10,.85);color:#fff;font-size:12px;padding:4px 10px;border-radius:20px}
+.card .in{padding:16px}
+.card h3{font-size:16px;color:#222;margin-bottom:6px;line-height:1.4;min-height:44px}
+.card .pr{font-size:22px;font-weight:700;color:#f5a623}
+.card .cd{font-size:12px;color:#2d5a1b;font-weight:600;margin-top:4px}
+.msg{grid-column:1/-1;text-align:center;padding:60px 20px;color:#888;font-size:17px}
+.pager{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 20px 60px}
+.pg{min-width:44px;height:44px;padding:0 8px;border:1px solid #e3e6e8;background:#f7f8f9;border-radius:8px;font-size:16px;color:#333;cursor:pointer;font-family:inherit}
+.pg:hover:not(:disabled):not(.on){border-color:#2d5a1b}
+.pg.on{background:#2d4d44;color:#fff;border-color:#2d4d44;font-weight:700}
+.pg:disabled{opacity:.4;cursor:default}
+.pg.dots{display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:default}
+@media(max-width:768px){.grid{grid-template-columns:1fr 1fr;gap:12px;padding:0 12px}.card .im{height:150px}.card h3{font-size:14px;min-height:40px}.card .pr{font-size:18px}.pg{min-width:38px;height:38px;font-size:14px}}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-
 <header>
-    <a href="index.html" class="logo">
-        <img src="images/logo.jpeg" alt="CampTrade Logo">
-    </a>
-    <nav>
-        <a href="index.html">Ana Səhifə</a>
-        <a href="satis.html">Satılıq</a>
-        <a href="kiraye.html">Kirayə</a>
-        <a href="sat.html">Məhsul Sat</a>
-        <a href="blog.html">Blog</a>
-        <a href="elaqe.html">Əlaqə</a>
-    </nav>
-    <div class="lang-switcher">
-        <button class="lang-btn active">🇦🇿</button>
-        <button class="lang-btn">🇬🇧</button>
-        <button class="lang-btn">🇷🇺</button>
-    </div>
+  <a href="index.html" class="logo"><img src="images/logo.jpeg" alt="CampTrade Logo"></a>
+  <nav>
+    <a href="index.html">Ana Səhifə</a><a href="satis.html">Satılıq</a><a href="kiraye.html">Kirayə</a>
+    <a href="sat.html">Məhsul Sat</a><a href="blog.html">Blog</a><a href="elaqe.html">Əlaqə</a>
+  </nav>
+  <div class="lang-switcher"><button class="lang-btn active">🇦🇿</button><button class="lang-btn">🇬🇧</button><button class="lang-btn">🇷🇺</button></div>
 </header>
 
-<div class="page-hero">
-    <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice">
-        <polygon points="-50,300 150,100 300,200 500,30 700,160 900,20 1100,180 1300,70 1490,130 1490,300" fill="white"/>
-    </svg>
-    <div class="page-hero-content">
-        <h1>⛺ Kirayə Məhsullar</h1>
-        <p>Çadır, sleeping bag, avadanlıq kirayəsi</p>
-    </div>
-</div>
+<div class="page-hero"><h1 id="pageTitle"></h1><p id="pageSub"></p></div>
 
-<div class="products-section">
-    <div class="loading" id="loading">⏳ Məhsullar yüklənir...</div>
-    <div class="products-grid" id="productsGrid" style="display:none"></div>
-    <div class="empty-state" id="emptyState" style="display:none">
-        <div class="icon">🎒</div>
-        <h3>Tezliklə kirayə məhsullar əlavə olunacaq!</h3>
-        <p>Hal-hazırda kirayə məhsul yoxdur.</p>
-    </div>
+<div class="toolbar">
+  <input class="search" id="q" placeholder="🔍 Məhsul axtar...">
+  <div class="chips" id="groupChips"></div>
+  <div class="chips sub" id="subChips"></div>
 </div>
-
-<div class="popup-overlay" id="popup">
-    <div class="popup-box">
-        <button class="popup-close" onclick="closePopup()">✕</button>
-        <div class="slider-wrapper" id="sliderWrapper">
-            <div class="slider-track" id="sliderTrack"></div>
-            <button class="slider-btn prev" id="prevBtn" onclick="slide(-1)">‹</button>
-            <button class="slider-btn next" id="nextBtn" onclick="slide(1)">›</button>
-            <div class="slider-dots" id="sliderDots"></div>
-        </div>
-        <div class="popup-info">
-            <h2 id="pTitle"></h2>
-            <div class="popup-price" id="pPrice"></div>
-            <p class="popup-desc" id="pDesc"></p>
-            <a class="popup-wa" id="pWa" href="#" target="_blank">💬 WhatsApp ilə Əlaqə</a>
-        </div>
-    </div>
-</div>
+<div class="count" id="count"></div>
+<div class="grid" id="grid"><div class="msg">⏳ Məhsullar yüklənir...</div></div>
+<div class="pager" id="pager"></div>
 
 <footer>
-    <div class="footer-logo">
-        <img src="images/logo.jpeg" alt="CampTrade">
-    </div>
-    <div class="social-links">
-        <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
-        <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
-    </div>
-    <p>© 2026 CampTrade. All rights reserved.</p>
+  <div class="footer-logo"><img src="images/logo.jpeg" alt="CampTrade"></div>
+  <div class="social-links">
+    <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
+    <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
+  </div>
+  <p>© 2026 CampTrade. All rights reserved.</p>
 </footer>
 
+<script src="js/categories.js"></script>
 <script>
-var SUPABASE_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+var SUPABASE_URL="https://iupwahtmnybxrowbkcfs.supabase.co";
+var SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
 
-var curSlide = 0;
-var totalSlides = 0;
-var allProducts = [];
+/* kiraye.html üçün YALNIZ bu sətri dəyişirik */
+var CAT='kiraye', TITLE='⛺ Kirayə Məhsullar', SUBTITLE='Çadır, kamp avadanlıqları kirayəsi';
 
-function loadProducts() {
-    fetch(SUPABASE_URL + '/rest/v1/products?kateqoriya=eq.kiraye&order=created_at.desc', {
-        headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-        }
-    })
-    .then(function(res) { return res.json(); })
-    .then(function(products) {
-        document.getElementById('loading').style.display = 'none';
+var PER=12, all=[], group='all', sub='all', page=1;
 
-        if (!products || products.length === 0) {
-            document.getElementById('emptyState').style.display = 'block';
-            return;
-        }
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function subOf(p){return p.alt_kateqoriya||OTHER}
+function grpOf(p){return mainOf(subOf(p))}
 
-        allProducts = products;
-        var grid = document.getElementById('productsGrid');
-        grid.style.display = 'grid';
+document.getElementById('pageTitle').textContent=TITLE;
+document.getElementById('pageSub').textContent=SUBTITLE;
+document.title='CampTrade - '+TITLE.replace(/^\S+\s/,'');
 
-        products.forEach(function(p, index) {
-            var imgs = p.sekiller ? p.sekiller.split(',') : [];
-            var firstImg = imgs.length > 0 ? imgs[0].trim() : 'images/logo.jpeg';
+fetch(SUPABASE_URL+'/rest/v1/products?kateqoriya=eq.'+CAT+'&order=created_at.desc',
+  {headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}})
+.then(function(r){return r.json()})
+.then(function(d){
+  all=Array.isArray(d)?d:[];
+  var u=new URLSearchParams(location.search), c=u.get('c'), g=u.get('g');
+  if(c){sub=c;group=mainOf(c)}else if(g){group=g}
+  render();
+})
+.catch(function(){document.getElementById('grid').innerHTML='<div class="msg">❌ Yüklənmə xətası</div>'});
 
-            var card = document.createElement('div');
-            card.className = 'product-card';
-            card.setAttribute('data-index', index);
-
-            card.innerHTML =
-                '<img src="' + firstImg + '" alt="' + p.ad + '" onerror="this.src=\'images/logo.jpeg\'">' +
-                '<div class="product-info">' +
-                    '<h3>' + p.ad + '</h3>' +
-                    '<div class="product-price">' + p.qiymet + ' AZN <span class="price-label">/ gün</span></div>' +
-                    '<p class="product-desc">' + p.melumat.replace(/\n/g, '<br>') + '</p>' +
-                    '<a href="https://wa.me/' + p.whatsapp + '" class="contact-btn" target="_blank">💬 WhatsApp ilə Əlaqə</a>' +
-                '</div>';
-
-            card.addEventListener('click', function(e) {
-                if (e.target.classList.contains('contact-btn')) return;
-                openPopup(index);
-            });
-
-            grid.appendChild(card);
-        });
-    })
-    .catch(function() {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('emptyState').style.display = 'block';
-    });
+function chip(label,count,attr,val,on){
+  return '<button class="chip'+(on?' active':'')+'" '+attr+'="'+esc(val)+'">'+esc(label)+'<small>'+count+'</small></button>';
 }
 
-function openPopup(index) {
-    var p = allProducts[index];
-    var imgs = p.sekiller ? p.sekiller.split(',').filter(function(x) { return x.trim(); }) : [];
-    totalSlides = imgs.length || 1;
-    curSlide = 0;
+function render(){
+  /* 1) Əsas bölmə düymələri */
+  var gc={};all.forEach(function(p){gc[grpOf(p)]=(gc[grpOf(p)]||0)+1});
+  var h=chip('🌿 Hamısı',all.length,'data-g','all',group==='all');
+  Object.keys(CATEGORIES).forEach(function(k){if(gc[k])h+=chip(k,gc[k],'data-g',k,group===k)});
+  document.getElementById('groupChips').innerHTML=h;
 
-    var track = document.getElementById('sliderTrack');
-    track.innerHTML = '';
-    track.style.transition = 'none';
-    track.style.transform = 'translateX(0)';
-
-    if (imgs.length === 0) {
-        var img = document.createElement('img');
-        img.src = 'images/logo.jpeg';
-        track.appendChild(img);
-    } else {
-        imgs.forEach(function(src) {
-            var img = document.createElement('img');
-            img.src = src.trim();
-            img.onerror = function() { this.src = 'images/logo.jpeg'; };
-            track.appendChild(img);
-        });
+  /* 2) Alt kateqoriya düymələri (yalnız bölmə seçiləndə) */
+  var sc={}, sh='';
+  if(group!=='all'){
+    all.forEach(function(p){if(grpOf(p)===group)sc[subOf(p)]=(sc[subOf(p)]||0)+1});
+    var keys=Object.keys(sc);
+    if(keys.length>1){
+      sh=chip('Hamısı',gc[group],'data-s','all',sub==='all');
+      keys.forEach(function(k){sh+=chip(k,sc[k],'data-s',k,sub===k)});
     }
+  }
+  document.getElementById('subChips').innerHTML=sh;
 
-    var dots = document.getElementById('sliderDots');
-    dots.innerHTML = '';
-    if (imgs.length > 1) {
-        imgs.forEach(function(x, i) {
-            var dot = document.createElement('div');
-            dot.className = i === 0 ? 'dot active' : 'dot';
-            dot.setAttribute('data-i', i);
-            dot.onclick = function() { goTo(parseInt(this.getAttribute('data-i'))); };
-            dots.appendChild(dot);
-        });
-    }
+  /* 3) Filtr */
+  var q=document.getElementById('q').value.toLowerCase().trim();
+  var list=all.filter(function(p){
+    return (group==='all'||grpOf(p)===group)&&(sub==='all'||subOf(p)===sub)&&
+      (!q||(p.ad+' '+(p.melumat||'')).toLowerCase().indexOf(q)>-1);
+  });
+  document.getElementById('count').textContent=list.length+' məhsul tapıldı';
 
-    document.getElementById('prevBtn').style.display = imgs.length > 1 ? 'block' : 'none';
-    document.getElementById('nextBtn').style.display = imgs.length > 1 ? 'block' : 'none';
+  /* 4) Səhifələmə */
+  var total=Math.ceil(list.length/PER);
+  if(page>total)page=1;
+  var show=list.slice((page-1)*PER,page*PER);
 
-    document.getElementById('pTitle').textContent = p.ad;
-    document.getElementById('pPrice').textContent = p.qiymet + ' AZN / gün';
-    document.getElementById('pDesc').innerHTML = p.melumat.replace(/\n/g, '<br>');
-    document.getElementById('pWa').href = 'https://wa.me/' + p.whatsapp;
-
-    document.getElementById('popup').style.display = 'block';
-    document.body.style.overflow = 'hidden';
+  var g=document.getElementById('grid');
+  if(!show.length){g.innerHTML='<div class="msg">📭 Bu kateqoriyada məhsul yoxdur</div>'}
+  else g.innerHTML=show.map(function(p){
+    var img=(p.sekiller||'').split(',')[0].trim()||'images/logo.jpeg';
+    return '<a class="card" href="product.html?id='+encodeURIComponent(p.id)+'">'+
+      '<div class="im"><img src="'+esc(img)+'" alt="'+esc(p.ad)+'" loading="lazy" onerror="this.src=\'images/logo.jpeg\'"><span class="tag">'+esc(subOf(p))+'</span></div>'+
+      '<div class="in"><h3>'+esc(p.ad)+'</h3><div class="pr">'+esc(p.qiymet)+' AZN</div>'+
+      '<div class="cd">'+esc(p.veziyyet||'')+'</div></div></a>';
+  }).join('');
+  document.getElementById('pager').innerHTML=pager(total);
 }
 
-function closePopup() {
-    document.getElementById('popup').style.display = 'none';
-    document.body.style.overflow = 'auto';
+function pager(total){
+  if(total<2)return '';
+  var n=[];
+  for(var i=1;i<=total;i++){
+    if(i===1||i===total||Math.abs(i-page)<=2)n.push(i);
+    else if(n[n.length-1]!=='…')n.push('…');
+  }
+  var h='<button class="pg" data-p="'+(page-1)+'"'+(page===1?' disabled':'')+'>←</button>';
+  n.forEach(function(x){
+    h+=x==='…'?'<span class="pg dots">…</span>':'<button class="pg'+(x===page?' on':'')+'" data-p="'+x+'">'+x+'</button>';
+  });
+  return h+'<button class="pg" data-p="'+(page+1)+'"'+(page===total?' disabled':'')+'>→</button>';
 }
 
-function slide(dir) {
-    curSlide = (curSlide + dir + totalSlides) % totalSlides;
-    goTo(curSlide);
-}
-
-function goTo(index) {
-    curSlide = index;
-    var wrapper = document.getElementById('sliderWrapper');
-    var track = document.getElementById('sliderTrack');
-    track.style.transition = 'transform 0.35s ease';
-    track.style.transform = 'translateX(-' + (index * wrapper.offsetWidth) + 'px)';
-
-    var dots = document.querySelectorAll('.dot');
-    dots.forEach(function(d, i) {
-        d.className = i === index ? 'dot active' : 'dot';
-    });
-}
-
-document.getElementById('popup').addEventListener('click', function(e) {
-    if (e.target === this) closePopup();
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.hasAttribute('data-g')){group=b.getAttribute('data-g');sub='all';page=1;render()}
+  else if(b.hasAttribute('data-s')){sub=b.getAttribute('data-s');page=1;render()}
+  else if(b.hasAttribute('data-p')&&!b.disabled){
+    page=parseInt(b.getAttribute('data-p'));render();
+    document.querySelector('.toolbar').scrollIntoView({behavior:'smooth'});
+  }
 });
-
-loadProducts();
+document.getElementById('q').addEventListener('input',function(){page=1;render()});
 </script>
-
 </body>
 </html>
