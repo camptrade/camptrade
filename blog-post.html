@@ -1,572 +1,307 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampTrade - Blog</title>
-    <link rel="icon" href="/favicon.ico" sizes="48x48">
-   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
-   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="css/shared.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f7f5f0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampTrade - Blog</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="css/shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{max-width:100%;overflow-x:clip}
+body{font-family:'Inter','Segoe UI',sans-serif;background:#fff}
 
-    /* HERO */
-    .post-hero-section {
-        position: relative;
-        height: 92vh;
-        min-height: 520px;
-        max-height: 720px;
-        overflow: hidden;
-    }
+/* ===== ÜST ŞƏKİL (köhnə böyük görünüş) ===== */
+.hero{position:relative;height:92vh;min-height:520px;max-height:720px;overflow:hidden;background:#1a3a0a}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block;
+  filter:brightness(.75);
+  transform:scale(1.08);
+  transition:transform 10s ease;
+  animation:heroIn 1.8s ease forwards;
+  mask-image:linear-gradient(to bottom,#000 0%,#000 60%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 60%,transparent 100%)}
+@keyframes heroIn{from{transform:scale(1.12);opacity:.6}to{transform:scale(1);opacity:1}}
+.hero:hover .hero-img{transform:scale(1.05)}
+.hero-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#2d5a1b,#1a3a0a)}
+.hero-shade{position:absolute;left:0;bottom:0;width:100%;height:75%;background:linear-gradient(to top,rgba(10,20,8,.88) 0%,rgba(10,20,8,.4) 50%,transparent 100%);pointer-events:none}
+.hero-top{position:absolute;top:0;left:0;width:100%;height:20%;background:linear-gradient(to bottom,rgba(0,0,0,.3),transparent);pointer-events:none}
+.hero-text{position:absolute;left:0;right:0;bottom:55px;max-width:1180px;margin:0 auto;padding:0 24px}
+.back-btn{position:absolute;top:28px;left:35px;z-index:5;background:rgba(255,255,255,.18);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;text-decoration:none;padding:10px 22px;border-radius:30px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,.35);transition:all .3s}
+.back-btn:hover{background:rgba(255,255,255,.32);transform:translateX(-3px)}
+.tag{display:inline-block;background:#f5a623;color:#fff;padding:7px 18px;border-radius:30px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-family:'Playfair Display',Georgia,serif;font-size:44px;line-height:1.22;color:#fff;font-weight:800;text-shadow:0 4px 15px rgba(0,0,0,.85);max-width:800px;margin-bottom:18px}
+.meta{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.9);letter-spacing:.3px}
 
-    .post-hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 30%; /* İnsanın üzü və bədəni daha yaxşı mərkəzləşsin */
-    display: block;
-    transition: transform 10s ease;
-    
-    /* Şəkli biraz tündləşdiririk ki, ağ yazılar rahat oxunsun */
-    filter: brightness(0.75); 
+/* ===== MƏZMUN ===== */
+.band{background:#fff}
+.grid{max-width:1180px;margin:0 auto;padding:50px 24px 60px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:45px;align-items:start}
+.article{min-width:0}
+.body{font-size:17px;line-height:1.9;color:#2e2e2e;overflow-wrap:anywhere}
+.body h2{font-family:'Playfair Display',Georgia,serif;font-size:25px;color:#2d5a1b;margin:42px 0 14px;font-weight:700;position:relative;padding-bottom:12px}
+.body h2:after{content:'';position:absolute;left:0;bottom:0;width:45px;height:3px;background:linear-gradient(to right,#2d5a1b,#f5a623);border-radius:3px}
+.body h3{font-size:19px;color:#2d5a1b;margin:28px 0 10px;font-weight:700}
+.body p{margin-bottom:18px}
+.body ul,.body ol{margin:12px 0 20px 24px}
+.body li{margin-bottom:9px;padding-left:4px}
+.body strong{color:#111}
+.body img{max-width:100%;height:auto;display:block;margin:28px auto;border-radius:16px;box-shadow:0 6px 26px rgba(0,0,0,.12)}
+.body div[style*="background:#e8f5e9"]{border-radius:14px!important;padding:16px 22px!important;margin:26px 0!important}
+.divider{width:70px;height:3px;background:linear-gradient(to right,#2d5a1b,#f5a623);border-radius:3px;margin:44px 0 30px}
+.share{background:#f6f8f4;border:1px solid #e6ebe2;border-radius:18px;padding:28px;text-align:center}
+.share p{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;font-weight:700;margin-bottom:16px}
+.share-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.sbtn{padding:11px 24px;border-radius:30px;font-size:14px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:inherit;display:inline-block}
+.sbtn.wa{background:#25D366;color:#fff}
+.sbtn.cp{background:#2d5a1b;color:#fff}
 
-    /* Aşağıya doğru yumşaq keçid (fade out) */
-    mask-image: linear-gradient(to bottom, 
-        rgba(0, 0, 0, 1) 0%, 
-        rgba(0, 0, 0, 1) 60%, 
-        rgba(0, 0, 0, 0) 100%);
-    -webkit-mask-image: linear-gradient(to bottom, 
-        rgba(0, 0, 0, 1) 0%, 
-        rgba(0, 0, 0, 1) 60%, 
-        rgba(0, 0, 0, 0) 100%);
-    }
+/* ===== YAN PANEL ===== */
+.side{display:flex;flex-direction:column;gap:20px;position:sticky;top:100px;min-width:0}
+.box{background:#fff;border:1px solid #ececec;border-radius:16px;padding:20px}
+.box h3{font-size:17px;color:#2d5a1b;margin-bottom:12px}
+.pi{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;padding:8px;border-radius:12px;transition:background .2s}
+.pi:hover{background:#f5f5f5}
+.pi img{width:70px;height:70px;border-radius:10px;object-fit:cover;flex:none;background:#eee}
+.pi span{display:block;font-size:14px;font-weight:600;line-height:1.35;color:#222}
+.pi b{display:block;margin-top:3px;color:#f5a623}
+.all{display:block;text-align:center;margin-top:10px;font-size:14px;font-weight:700;color:#2d5a1b;text-decoration:none}
+.cta{background:linear-gradient(135deg,#2d5a1b,#1a3a0a);border:none;text-align:center;color:#fff}
+.cta h3{color:#fff}
+.cta p{font-size:14px;opacity:.85;margin-bottom:14px}
+.cta a{display:block;background:#25D366;color:#fff;padding:12px;border-radius:10px;text-decoration:none;font-weight:700}
 
-    .post-hero-section:hover .post-hero-img {
-        transform: scale(1.04);
-    }
+/* ===== DİGƏR YAZILAR ===== */
+.related{background:#f7f5f0;padding:55px 24px 65px}
+.related-in{max-width:1180px;margin:0 auto}
+.related h3{font-family:'Playfair Display',Georgia,serif;font-size:28px;color:#1a1a1a;margin-bottom:8px;font-weight:800}
+.related .sub{font-size:14px;color:#999;margin-bottom:30px}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.rcard{display:block;background:#fff;border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 3px 15px rgba(0,0,0,.07);transition:transform .3s,box-shadow .3s}
+.rcard:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.rcard img{width:100%;height:160px;object-fit:cover;display:block}
+.rph{height:160px;display:flex;align-items:center;justify-content:center;font-size:44px;background:linear-gradient(135deg,#2d5a1b,#1a3a0a)}
+.rinfo{padding:18px}
+.rtag{font-size:10px;font-weight:800;color:#f5a623;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.rinfo h4{font-size:15px;line-height:1.5;color:#1a1a1a;margin-bottom:8px}
+.rinfo p{font-size:12px;color:#aaa}
 
-    .post-hero-placeholder {
-        width: 100%; height: 100%;
-        background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
-        display: flex; align-items: center;
-        justify-content: center; font-size: 120px;
-    }
+/* ===== YÜKLƏNİR / XƏTA ===== */
+.state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;gap:16px;text-align:center;padding:40px 20px;color:#888}
+.ring{width:46px;height:46px;border:4px solid #e8e8e0;border-top-color:#2d5a1b;border-radius:50%;animation:spin .85s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Soft bottom fade */
-    .post-hero-overlay {
-        position: absolute;
-        bottom: 0; left: 0;
-        width: 100%; height: 75%;
-        background: linear-gradient(to top,
-            rgba(10,20,8,0.88) 0%,
-            rgba(10,20,8,0.4) 50%,
-            transparent 100%);
-    }
-
-    /* Soft top fade for back button */
-    .post-hero-top-fade {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 20%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
-        pointer-events: none;
-    }
-
-    .post-hero-content {
-        position: absolute;
-        bottom: 55px; left: 0; right: 0;
-        padding: 0 70px;
-        max-width: 960px;
-        margin: 0 auto;
-    }
-
-    .post-tag {
-        display: inline-block;
-        background: #f5a623;
-        color: white;
-        padding: 7px 18px;
-        border-radius: 30px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 18px;
-    }
-
-    .post-hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 44px;
-    color: white;
-    line-height: 1.22;
-    font-weight: 800;
-    /* Daha tünd və yayğın kölgə - yazını şəkildən tam ayırır */
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.85);
-    margin-bottom: 18px;
-    max-width: 750px;
+/* ===== TELEFON ===== */
+@media(max-width:960px){
+  .grid{display:block;padding:30px 20px 30px}
+  .side{position:static;margin-top:34px}
 }
-
-.post-hero-meta {
-    display: flex; 
-    gap: 22px;
-    font-size: 13px;
-    /* Rəngi tam ağ edib kölgə əlavə edirik ki, tarix və oxunma müddəti də net görünsün */
-    color: #ffffff;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-    flex-wrap: wrap;
-    letter-spacing: 0.3px;
+@media(max-width:768px){
+  .hero{height:70vh;min-height:400px}
+  .hero h1{font-size:26px}
+  .hero-text{padding:0 25px;bottom:35px}
+  .back-btn{top:18px;left:18px;padding:9px 16px;font-size:12px}
+  .body{font-size:16px}
+  .related{padding:45px 20px}
 }
-
-    /* BACK BUTTON */
-    .back-btn {
-        position: absolute;
-        top: 28px; left: 35px;
-        z-index: 10;
-        background: rgba(255,255,255,0.18);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        color: white;
-        text-decoration: none;
-        padding: 10px 22px;
-        border-radius: 30px;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.3s;
-        border: 1px solid rgba(255,255,255,0.35);
-        letter-spacing: 0.3px;
-    }
-
-    .back-btn:hover {
-        background: rgba(255,255,255,0.32);
-        transform: translateX(-3px);
-    }
-
-    /* WAVE DIVIDER between hero and article */
-    .wave-divider {
-        display: block;
-        width: 100%;
-        margin-top: -2px;
-        background: #f7f5f0;
-    }
-
-    /* ARTICLE */
-    .article-wrapper {
-        max-width: 760px;
-        margin: 0 auto;
-        padding: 55px 35px 90px;
-        background: white;
-        border-radius: 0 0 30px 30px;
-        box-shadow: 0 8px 50px rgba(0,0,0,0.07);
-        position: relative;
-    }
-
-    .article-body {
-        font-size: 16.5px;
-        color: #2e2e2e;
-        line-height: 1.92;
-        letter-spacing: 0.15px;
-    }
-
-    .article-body h2 {
-        font-family: 'Playfair Display', serif;
-        font-size: 24px;
-        color: #2d5a1b;
-        margin: 48px 0 16px;
-        font-weight: 700;
-        position: relative;
-        padding-bottom: 12px;
-    }
-
-    .article-body h2::after {
-        content: '';
-        position: absolute;
-        bottom: 0; left: 0;
-        width: 45px; height: 3px;
-        background: linear-gradient(to right, #2d5a1b, #f5a623);
-        border-radius: 3px;
-    }
-
-    .article-body h3 {
-        font-size: 19px;
-        color: #2d5a1b;
-        margin: 32px 0 12px;
-        font-weight: 700;
-    }
-
-    .article-body p { margin-bottom: 20px; }
-
-    .article-body ul, .article-body ol {
-        margin: 12px 0 22px 22px;
-    }
-
-    .article-body ul li, .article-body ol li {
-        margin-bottom: 10px;
-        padding-left: 6px;
-    }
-
-    .article-body strong { color: #1a1a1a; font-weight: 700; }
-    .article-body em { color: #555; font-style: italic; }
-
-    /* IMAGES IN ARTICLE — aesthetic soft edges */
-    .article-body img,
-    .article-body div img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 18px;
-        box-shadow:
-            0 6px 30px rgba(0,0,0,0.12),
-            0 2px 8px rgba(0,0,0,0.06);
-        display: block;
-        margin: 30px auto;
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        mask-image: radial-gradient(ellipse at center,
-            black 92%, transparent 100%);
-        -webkit-mask-image: radial-gradient(ellipse at center,
-            black 92%, transparent 100%);
-    }
-
-    .article-body img:hover,
-    .article-body div img:hover {
-        transform: scale(1.015);
-        box-shadow: 0 12px 45px rgba(0,0,0,0.16);
-    }
-
-    /* TIP BOX */
-    .article-body div[style*="background:#e8f5e9"] {
-        border-radius: 14px !important;
-        border-left: 4px solid #2d5a1b !important;
-        padding: 16px 22px !important;
-        margin: 28px 0 !important;
-        background: linear-gradient(135deg, #e8f5e9, #f1faf2) !important;
-    }
-
-    /* DIVIDER */
-    .article-divider {
-        width: 70px; height: 3px;
-        background: linear-gradient(to right, #2d5a1b, #f5a623);
-        border-radius: 3px;
-        margin: 50px 0;
-    }
-
-    /* SHARE */
-    .share-section {
-        background: linear-gradient(135deg, #f9f6f0, #f0f7f0);
-        border-radius: 20px;
-        padding: 35px 30px;
-        text-align: center;
-        margin-top: 50px;
-        border: 1px solid #e8e8e0;
-    }
-
-    .share-section p {
-        font-size: 11px;
-        color: #aaa;
-        margin-bottom: 18px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-
-    .share-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-
-    .share-btn {
-        padding: 11px 24px;
-        border-radius: 30px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 700;
-        transition: all 0.3s;
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        letter-spacing: 0.3px;
-    }
-
-    .share-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-    .share-btn.wa { background: #25D366; color: white; }
-    .share-btn.copy { background: #2d5a1b; color: white; border: none; cursor: pointer; }
-
-    /* RELATED */
-    .related-section {
-        background: #f7f5f0;
-        padding: 65px 30px 70px;
-    }
-
-    .related-inner { max-width: 760px; margin: 0 auto; }
-
-    .related-inner h3 {
-        font-family: 'Playfair Display', serif;
-        font-size: 28px;
-        color: #1a1a1a;
-        margin-bottom: 10px;
-        font-weight: 800;
-    }
-
-    .related-inner .subtitle {
-        font-size: 14px;
-        color: #aaa;
-        margin-bottom: 35px;
-        letter-spacing: 0.3px;
-    }
-
-    .related-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 22px;
-    }
-
-    .related-card {
-        background: white;
-        border-radius: 18px;
-        overflow: hidden;
-        text-decoration: none;
-        color: inherit;
-        transition: transform 0.35s ease, box-shadow 0.35s ease;
-        display: block;
-        box-shadow: 0 3px 15px rgba(0,0,0,0.07);
-    }
-
-    .related-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-    }
-
-    .related-card-img {
-        width: 100%; height: 165px;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .related-card:hover .related-card-img { transform: scale(1.04); }
-
-    .related-card-placeholder {
-        width: 100%; height: 165px;
-        background: linear-gradient(135deg, #2d5a1b, #1a3a0a);
-        display: flex; align-items: center;
-        justify-content: center; font-size: 45px;
-    }
-
-    .related-card-info { padding: 20px; }
-
-    .related-card-tag {
-        font-size: 10px;
-        font-weight: 800;
-        color: #f5a623;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        margin-bottom: 8px;
-    }
-
-    .related-card-info h4 {
-        font-size: 15px;
-        color: #1a1a1a;
-        line-height: 1.5;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-
-    .related-card-info p { font-size: 12px; color: #bbb; }
-
-    /* LOADING */
-    .loading-post {
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        min-height: 60vh; gap: 18px;
-        background: #f7f5f0;
-    }
-
-    .loading-spinner-ring {
-        width: 48px; height: 48px;
-        border: 4px solid #e8e8e0;
-        border-top-color: #2d5a1b;
-        border-radius: 50%;
-        animation: spin 0.85s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-post p { color: #aaa; font-size: 15px; letter-spacing: 0.3px; }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-        .post-hero-section { height: 70vh; min-height: 400px; }
-        .post-hero-title { font-size: 26px; }
-        .post-hero-content { padding: 0 25px; bottom: 35px; }
-        .article-wrapper { padding: 35px 20px 65px; border-radius: 0; }
-        .article-body { font-size: 16px; }
-        .back-btn { top: 18px; left: 18px; padding: 9px 16px; font-size: 12px; }
-        .related-section { padding: 50px 20px; }
-    }
-    </style>
+</style>
 </head>
 <body>
 
 <header>
-    <a href="index.html" class="logo">
-        <img src="images/logo.jpeg" alt="CampTrade Logo">
-    </a>
-    <nav>
-        <a href="index.html">Ana Səhifə</a>
-        <a href="satis.html">Satılıq</a>
-        <a href="kiraye.html">Kirayə</a>
-        <a href="sat.html">Məhsul Sat</a>
-        <a href="blog.html">Blog</a>
-        <a href="elaqe.html">Əlaqə</a>
-    </nav>
-    <div class="lang-switcher">
-        <button class="lang-btn active">🇦🇿</button>
-        <button class="lang-btn">🇬🇧</button>
-        <button class="lang-btn">🇷🇺</button>
-    </div>
+  <a href="index.html" class="logo"><img src="images/logo.jpeg" alt="CampTrade Logo"></a>
+  <nav>
+    <a href="index.html">Ana Səhifə</a>
+    <a href="satis.html">Satılıq</a>
+    <a href="kiraye.html">Kirayə</a>
+    <a href="sat.html">Məhsul Sat</a>
+    <a href="blog.html">Blog</a>
+    <a href="elaqe.html">Əlaqə</a>
+  </nav>
+  <div class="lang-switcher">
+    <button class="lang-btn active">🇦🇿</button>
+    <button class="lang-btn">🇬🇧</button>
+    <button class="lang-btn">🇷🇺</button>
+  </div>
 </header>
 
 <div id="postContent">
-    <div class="loading-post">
-        <div class="loading-spinner-ring"></div>
-        <p>Yazı yüklənir...</p>
-    </div>
+  <div class="state"><div class="ring"></div><p>Yazı yüklənir...</p></div>
 </div>
 
-<div class="related-section" id="relatedSection" style="display:none">
-    <div class="related-inner">
-        <h3>Digər Yazılar</h3>
-        <p class="subtitle">Bəlkə bunlar da marağınızı çəkər</p>
-        <div class="related-grid" id="relatedGrid"></div>
-    </div>
+<div class="related" id="relatedSection" style="display:none">
+  <div class="related-in">
+    <h3>Digər Yazılar</h3>
+    <p class="sub">Bəlkə bunlar da marağınızı çəkər</p>
+    <div class="rgrid" id="relatedGrid"></div>
+  </div>
 </div>
 
 <footer>
-    <div class="footer-logo">
-        <img src="images/logo.jpeg" alt="CampTrade">
-    </div>
-    <div class="social-links">
-        <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
-        <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
-        <a href="tel:+994554410372">📞 +994 55 441 03 72</a>
-    </div>
-    <p>© 2026 CampTrade. All rights reserved.</p>
+  <div class="footer-logo"><img src="images/logo.jpeg" alt="CampTrade"></div>
+  <div class="social-links">
+    <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
+    <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
+    <a href="tel:+994554410372">📞 +994 55 441 03 72</a>
+  </div>
+  <p>© 2026 CampTrade. All rights reserved.</p>
 </footer>
 
 <script>
-var SUPABASE_URL = "https://iupwahtmnybxrowbkcfs.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+var SB = "https://iupwahtmnybxrowbkcfs.supabase.co";
+var KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cHdhaHRtbnlieHJvd2JrY2ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTU3MDksImV4cCI6MjA5NTg5MTcwOX0.QG1fL54mB8-mMKhb3Amc7W7yhTAfo3mCP5UubdVqw4E";
+var HDR = { apikey: KEY, Authorization: 'Bearer ' + KEY };
+var MONTHS = ['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
 
-function getParam(name) {
-    return new URLSearchParams(window.location.search).get(name);
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+}
+
+function get(path) {
+    return fetch(SB + '/rest/v1/' + path, { headers: HDR }).then(function (r) { return r.json(); });
+}
+
+function fmtDate(d) {
+    var x = new Date(d);
+    if (isNaN(x.getTime())) return '';
+    return x.getDate() + ' ' + MONTHS[x.getMonth()] + ' ' + x.getFullYear();
+}
+
+function fmtRead(r) {
+    r = String(r || '').trim();
+    return /^\d+$/.test(r) ? r + ' dəq oxu' : r;
+}
+
+function countView(table, id, current, cb) {
+    var key = 'v_' + table + '_' + id, last = 0;
+    try { last = parseInt(localStorage.getItem(key) || '0', 10); } catch (e) {}
+    if (Date.now() - last < 30 * 60 * 1000) { cb(current); return; }
+    fetch(SB + '/rest/v1/rpc/increment_views', {
+        method: 'POST',
+        headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_table: table, p_id: String(id) })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (n) {
+        try { localStorage.setItem(key, String(Date.now())); } catch (e) {}
+        cb(typeof n === 'number' ? n : current);
+    })
+    .catch(function () { cb(current); });
 }
 
 function copyLink() {
-    navigator.clipboard.writeText(window.location.href);
+    if (navigator.clipboard) navigator.clipboard.writeText(location.href);
     alert('✅ Link kopyalandı!');
 }
 
-async function loadPost() {
-    var id = getParam('id');
-    var container = document.getElementById('postContent');
-
-    if (!id) {
-        container.innerHTML = '<div style="text-align:center;padding:100px 20px;"><h2 style="color:#e53e3e;">❌ Yazı tapılmadı</h2><p style="color:#888;margin:15px 0;"><a href="blog.html" style="color:#2d5a1b;font-weight:700;">← Bloga qayıt</a></p></div>';
-        return;
-    }
-
-    try {
-        var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?id=eq.' + id, {
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': 'Bearer ' + SUPABASE_KEY
-            }
-        });
-
-        var data = await res.json();
-
-        if (!data || data.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:100px 20px;"><h2 style="color:#e53e3e;">❌ Yazı tapılmadı</h2><a href="blog.html" style="color:#2d5a1b;font-weight:700;">← Bloga qayıt</a></div>';
-            return;
-        }
-
-        var b = data[0];
-        var date = new Date(b.created_at).toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
-
-        document.title = b.baslig + ' — CampTrade Blog';
-
-        var waLink = 'https://wa.me/?text=' + encodeURIComponent(b.baslig + ' ' + window.location.href);
-        var igLink = 'https://www.instagram.com/';
-
-        var heroHtml = b.sekil
-            ? '<img class="post-hero-img" src="' + b.sekil + '" alt="' + b.baslig + '">'
-            : '<div class="post-hero-placeholder">📰</div>';
-
-        container.innerHTML =
-            '<div class="post-hero-section">' +
-                '<a href="blog.html" class="back-btn">← Bloga Qayıt</a>' +
-                heroHtml +
-                '<div class="post-hero-top-fade"></div>' +
-                '<div class="post-hero-overlay"></div>' +
-                '<div class="post-hero-content">' +
-                    '<span class="post-tag">' + b.kateqoriya + '</span>' +
-                    '<h1 class="post-hero-title">' + b.baslig + '</h1>' +
-                    '<div class="post-hero-meta">' +
-                        '<span>📅 ' + date + '</span>' +
-                        '<span>⏱️ ' + b.oxuma_muddeti + '</span>' +
-                    '</div>' +
-                '</div>' +
-            '</div>' +
-            '<div class="article-wrapper">' +
-                '<div class="article-body">' + b.metn + '</div>' +
-                '<div class="article-divider"></div>' +
-                '<div class="share-section">' +
-                    '<p>Bu yazını paylaş</p>' +
-                    '<div class="share-btns">' +
-                        '<a href="' + waLink + '" class="share-btn wa" target="_blank">💬 WhatsApp</a>' +
-                        '<button onclick="copyLink()" class="share-btn copy" style="border:none;cursor:pointer;">🔗 Linki Kopyala</button>' +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-
-        loadRelated(b.id, b.kateqoriya);
-
-    } catch(e) {
-        container.innerHTML = '<div style="text-align:center;padding:100px 20px;"><h2>❌ Xəta baş verdi</h2><a href="blog.html" style="color:#2d5a1b;">← Bloga qayıt</a></div>';
-    }
+function showError(msg) {
+    document.getElementById('postContent').innerHTML =
+        '<div class="state"><h2 style="color:#e53e3e">❌ ' + esc(msg) + '</h2>' +
+        '<a href="blog.html" style="color:#2d5a1b;font-weight:700">← Bloga qayıt</a></div>';
 }
 
-async function loadRelated(currentId, category) {
-    try {
-        var res = await fetch(SUPABASE_URL + '/rest/v1/blogs?order=created_at.desc', {
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': 'Bearer ' + SUPABASE_KEY
-            }
-        });
+function loadPost() {
+    var id = new URLSearchParams(location.search).get('id');
+    if (!id) { showError('Yazı tapılmadı'); return; }
 
-        var blogs = await res.json();
-        var filtered = blogs.filter(function(b) { return b.id !== currentId; }).slice(0, 3);
+    get('blogs?id=eq.' + encodeURIComponent(id))
+        .then(function (d) {
+            if (!Array.isArray(d) || !d[0]) { showError('Yazı tapılmadı'); return; }
+            try { show(d[0]); }
+            catch (e) { showError('Göstərmə xətası: ' + e.message); }
+        })
+        .catch(function () { showError('Xəta baş verdi'); });
+}
 
-        if (filtered.length === 0) return;
+function show(b) {
+    document.title = b.baslig + ' — CampTrade Blog';
 
-        var grid = document.getElementById('relatedGrid');
-        grid.innerHTML = filtered.map(function(b) {
-            var imgHtml = b.sekil
-                ? '<img class="related-card-img" src="' + b.sekil + '" alt="' + b.baslig + '" onerror="this.style.display=\'none\'">'
-                : '<div class="related-card-placeholder">📰</div>';
+    var waLink = 'https://wa.me/?text=' + encodeURIComponent(b.baslig + ' ' + location.href);
+    var cover = b.sekil
+        ? '<img class="hero-img" src="' + esc(b.sekil) + '" alt="' + esc(b.baslig) + '">'
+        : '<div class="hero-ph">📰</div>';
 
-            return '<a href="blog-post.html?id=' + b.id + '" class="related-card">' +
-                imgHtml +
-                '<div class="related-card-info">' +
-                    '<div class="related-card-tag">' + b.kateqoriya + '</div>' +
-                    '<h4>' + b.baslig + '</h4>' +
-                    '<p>⏱️ ' + b.oxuma_muddeti + '</p>' +
-                '</div>' +
-            '</a>';
-        }).join('');
+    document.getElementById('postContent').innerHTML =
+        '<section class="hero">' +
+            cover +
+            '<div class="hero-top"></div>' +
+            '<div class="hero-shade"></div>' +
+            '<a href="blog.html" class="back-btn">← Bloga Qayıt</a>' +
+            '<div class="hero-text">' +
+                '<span class="tag">' + esc(b.kateqoriya) + '</span>' +
+                '<h1>' + esc(b.baslig) + '</h1>' +
+                '<div class="meta"><span>📅 ' + fmtDate(b.created_at) + '</span><span>⏱️ ' + esc(fmtRead(b.oxuma_muddeti)) + '</span><span id="viewsBadge">👁 ' + (b.views || 0) + ' baxış</span></div>' +
+            '</div>' +
+        '</section>' +
+        '<div class="band"><div class="grid">' +
+            '<article class="article">' +
+                '<div class="body">' + (b.metn || '') + '</div>' +
+                '<div class="divider"></div>' +
+                '<div class="share"><p>Bu yazını paylaş</p><div class="share-btns">' +
+                    '<a href="' + waLink + '" class="sbtn wa" target="_blank">💬 WhatsApp</a>' +
+                    '<button class="sbtn cp" onclick="copyLink()">🔗 Linki Kopyala</button>' +
+                '</div></div>' +
+            '</article>' +
+            '<aside class="side">' +
+                '<div id="prodBox"></div>' +
+                '<div class="box cta"><h3>Sualın var?</h3><p>Avadanlıq seçimində kömək edək.</p>' +
+                '<a target="_blank" href="https://wa.me/994554410372">💬 WhatsApp ilə yaz</a></div>' +
+            '</aside>' +
+        '</div></div>';
 
-        document.getElementById('relatedSection').style.display = 'block';
-    } catch(e) {}
+    countView('blogs', b.id, b.views || 0, function (n) {
+        var e = document.getElementById('viewsBadge');
+        if (e) e.textContent = '👁 ' + n + ' baxış';
+    });
+    loadProducts(b.mehsul_kateqoriya);
+    loadRelated(b.id);
+}
+
+/* Bloqda göstəriləcək məhsullar (admin paneldə seçilən alt kateqoriyalar) */
+function loadProducts(csv) {
+    var subs = String(csv || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+    if (!subs.length) return;
+
+    var list = '(' + subs.map(function (s) { return '"' + s + '"'; }).join(',') + ')';
+    get('products?kateqoriya=eq.satis&alt_kateqoriya=in.' + encodeURIComponent(list) + '&order=created_at.desc&limit=6')
+        .then(function (p) {
+            if (!Array.isArray(p) || !p.length) return;
+            var more = subs.length === 1 ? 'satis.html?c=' + encodeURIComponent(subs[0]) : 'satis.html';
+            document.getElementById('prodBox').innerHTML =
+                '<div class="box"><h3>🛒 Bu yazıdakı məhsullar</h3>' +
+                p.map(function (x) {
+                    var im = (x.sekiller || '').split(',')[0].trim() || 'images/logo.jpeg';
+                    return '<a class="pi" href="product.html?id=' + encodeURIComponent(x.id) + '">' +
+                        '<img src="' + esc(im) + '" alt="" onerror="this.src=\'images/logo.jpeg\'">' +
+                        '<div><span>' + esc(x.ad) + '</span><b>' + esc(x.qiymet) + ' AZN</b></div></a>';
+                }).join('') +
+                '<a class="all" href="' + more + '">Hamısına bax →</a></div>';
+        })
+        .catch(function () {});
+}
+
+/* Digər yazılar */
+function loadRelated(currentId) {
+    get('blogs?order=created_at.desc&id=neq.' + encodeURIComponent(currentId) + '&limit=3')
+        .then(function (list) {
+            if (!Array.isArray(list) || !list.length) return;
+            document.getElementById('relatedGrid').innerHTML = list.map(function (b) {
+                var img = b.sekil
+                    ? '<img src="' + esc(b.sekil) + '" alt="" onerror="this.style.display=\'none\'">'
+                    : '<div class="rph">📰</div>';
+                return '<a href="blog-post.html?id=' + encodeURIComponent(b.id) + '" class="rcard">' + img +
+                    '<div class="rinfo"><div class="rtag">' + esc(b.kateqoriya) + '</div>' +
+                    '<h4>' + esc(b.baslig) + '</h4><p>⏱️ ' + esc(fmtRead(b.oxuma_muddeti)) + '</p></div></a>';
+            }).join('');
+            document.getElementById('relatedSection').style.display = 'block';
+        })
+        .catch(function () {});
 }
 
 loadPost();
 </script>
-
 </body>
 </html>
