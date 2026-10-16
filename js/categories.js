@@ -33,13 +33,13 @@ var CATEGORIES = {
     "Maqnezium daşlı",
     "Sadə"
   ],
-  "Digər": [
-    "Digər"
-  ],
   "Xizək avadanlıqları": [
     "Xizək eynəyi",
     "Xizək əlcəyi",
     "Xizək ayaqqabısı"
+  ],
+  "Digər": [
+    "Digər"
   ]
 };
 
