@@ -35,6 +35,11 @@ var CATEGORIES = {
   ],
   "Digər": [
     "Digər"
+  ],
+  "Xizək avadanlıqları": [
+    "Xizək eynəyi",
+    "Xizək əlcəyi",
+    "Xizək ayaqqabısı"
   ]
 };
 
