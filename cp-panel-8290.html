@@ -336,10 +336,47 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>📋 Məhsul Haqqında</label>
-                    <textarea id="productDesc" placeholder="Məhsul haqqında ətraflı məlumat yazın..."></textarea>
-                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+    <label>📋 Məhsul Haqqında</label>
+    <div style="border:2px solid #ddd; border-radius:10px; overflow:hidden; background:white;">
+
+        <!-- TOOLBAR -->
+        <div style="background:#f8f8f8; padding:10px 12px; display:flex; gap:6px; flex-wrap:wrap; border-bottom:2px solid #eee; align-items:center;">
+            <!-- Text formatting -->
+            <button type="button" onclick="blogCmd('bold')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:14px;" title="Qalın">B</button>
+            <button type="button" onclick="blogCmd('italic')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-style:italic;font-size:14px;" title="İtalik">I</button>
+            <button type="button" onclick="blogCmd('underline')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;text-decoration:underline;font-size:14px;" title="Alt xətt">U</button>
+
+            <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+            <!-- Headings -->
+            <button type="button" onclick="blogBlock('h2')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;" title="Başlıq">H2</button>
+            <button type="button" onclick="blogBlock('h3')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;" title="Alt başlıq">H3</button>
+            <button type="button" onclick="blogBlock('p')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;" title="Normal mətn">¶</button>
+
+            <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+            <!-- Lists -->
+            <button type="button" onclick="blogCmd('insertUnorderedList')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:14px;" title="Siyahı">• List</button>
+            <button type="button" onclick="blogCmd('insertOrderedList')" style="background:white;border:1px solid #ddd;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:14px;" title="Nömrəli siyahı">1. List</button>
+
+            <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+            <!-- Special -->
+            <button type="button" onclick="insertBlogTip()" style="background:#e8f5e9;border:1px solid #2d5a1b;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:#2d5a1b;font-weight:600;" title="Məsləhət qutusu">💡 Tip</button>
+            <button type="button" onclick="insertBlogImage()" style="background:#fff3e0;border:1px solid #f5a623;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:#e65100;font-weight:600;" title="Şəkil əlavə et">📷 Şəkil</button>
+
+            <div style="width:1px;height:24px;background:#ddd;margin:0 4px;"></div>
+
+            <!-- Align -->
+            <button type="button" onclick="blogCmd('justifyLeft')" style="background:white;border:1px solid #ddd;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:14px;" title="Sol">≡</button>
+            <button type="button" onclick="blogCmd('justifyCenter')" style="background:white;border:1px solid #ddd;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:14px;" title="Orta">≡</button>
+        </div>
+
+        <!-- Yazı yazılacaq böyük boşluq (Content Editable) -->
+        <div id="productDesc" contenteditable="true" style="padding: 15px; min-height: 180px; outline: none; font-size: 14px; line-height: 1.5; color: #333;" placeholder="Məhsul haqqında ətraflı məlumat yazın..."></div>
+    </div>
+</div>
 
                 <div class="form-group">
                     <label>📱 WhatsApp Nömrə</label>
