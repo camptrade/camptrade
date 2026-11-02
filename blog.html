@@ -6,7 +6,9 @@
     <link rel="icon" href="/favicon.ico" sizes="48x48">
    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <title>CampTrade - Blog</title>
+    <title>Outdoor Blog – Camping və Hiking Məsləhətləri | CampTrade</title>
+    <meta name="description" content="Camping, hiking və outdoor avadanlıqları haqqında bloglar.">
+    <link rel="canonical" href="https://camptrade.az/blog">
     <link rel="stylesheet" href="css/shared.css">
     <style>
         .page-hero {
@@ -229,9 +231,9 @@
 </div>
 
 <div class="blog-container">
-    <div class="loading" id="loading">⏳ Yazılar yüklənir...</div>
+    <div class="loading" id="loading" data-nosnippet>⏳ Yazılar yüklənir...</div>
     <div class="blog-grid" id="blogGrid" style="display:none"></div>
-    <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-state" id="emptyState" style="display:none" data-nosnippet>
         <div class="icon">📭</div>
         <p>Hələ blog yazısı yoxdur.</p>
     </div>
@@ -289,8 +291,10 @@ function loadBlogs() {
         renderBlogs(blogs);
     })
     .catch(function() {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('loading').style.display = 'none';
+    var e = document.getElementById('emptyState');
+    e.querySelector('p').textContent = 'Yazılar yüklənmədi. Səhifəni yeniləyin.';
+    e.style.display = 'block';
     });
 }
 
