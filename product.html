@@ -84,7 +84,6 @@ else api('id=eq.'+encodeURIComponent(id)).then(function(d){
 }).catch(function(){root.innerHTML='<div class="state">❌ Xəta baş verdi</div>'});
 
 function show(p){
-  document.title=p.ad+' - CampTrade';
   imgs=(p.sekiller||'').split(',').map(function(x){return x.trim()}).filter(Boolean);
   if(!imgs.length)imgs=['images/logo.jpeg'];
   var isRent=p.kateqoriya==='kiraye', sub=p.alt_kateqoriya||'Digər';
