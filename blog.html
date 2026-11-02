@@ -227,7 +227,7 @@
     <button class="filter-btn" onclick="filterBlogs('Başlanğıc', this)">🔰 Başlanğıc</button>
     <button class="filter-btn" onclick="filterBlogs('Avadanlıq', this)">🎒 Avadanlıq</button>
     <button class="filter-btn" onclick="filterBlogs('Azərbaycan', this)">🇦🇿 Azərbaycan</button>
-    <button class="filter-btn" onclick="filterBlogs('Təcrübə', this)">🏔️ Təcrübə</button>
+    <button class="filter-btn" onclick="filterBlogs('Geyim', this)">👕 Geyim</button>
 </div>
 
 <div class="blog-container">
@@ -320,7 +320,8 @@ function renderBlogs(blogs) {
             ? '<div class="blog-img"><img src="' + b.sekil + '" alt="' + b.baslig + '" onerror="this.parentElement.innerHTML=\'📰\'"></div>'
             : '<div class="blog-img">📰</div>';
 
-        var date = new Date(b.created_at).toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
+        var dt = new Date(b.created_at);
+        var date = dt.getDate() + ' ' + ['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'][dt.getMonth()] + ' ' + dt.getFullYear();
 
         card.innerHTML =
             imgHtml +
@@ -329,14 +330,14 @@ function renderBlogs(blogs) {
                 '<h3>' + b.baslig + '</h3>' +
                 '<div class="blog-meta">' +
                     '<span>📅 ' + date + '</span>' +
-                    '<span>⏱️ ' + b.oxuma_muddeti + '</span>' +
+                    '<span>⏱️ ' + (/^\d+$/.test(String(b.oxuma_muddeti).trim()) ? b.oxuma_muddeti + ' dəq oxu' : b.oxuma_muddeti) + '</span>' +
                 '</div>' +
                 '<a href="blog-post.html?id=' + b.id + '" class="read-more">Davam et →</a>' +
             '</div>';
 
-        card.addEventListener('click', function() {
-            openPost(index);
-        });
+            card.addEventListener('click', function() {
+               window.location.href = 'blog-post.html?id=' + b.id;
+           });
 
         grid.appendChild(card);
     });
