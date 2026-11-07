@@ -71,10 +71,10 @@
 
 <footer>
   <div class="footer-logo"><img src="images/logo.jpeg" alt="CampTrade"></div>
-  <div class="social-links">
+  <div class="social-links" data-nosnippet>
     <a href="https://www.instagram.com/camp_trade?igsh=MTlxemZpaXY5Mm5qag==" target="_blank">📸 Instagram</a>
     <a href="https://wa.me/994554410372" target="_blank">💬 WhatsApp</a>
-        <a href="tel:+994554410372">📞 +994 55 441 03 72</a>
+    <a href="tel:+994554410372">📞 +994 55 441 03 72</a>
   </div>
   <p>© 2026 CampTrade. All rights reserved.</p>
 </footer>
@@ -98,14 +98,19 @@ document.getElementById('pageSub').textContent=SUBTITLE;
 
 fetch(SUPABASE_URL+'/rest/v1/products?kateqoriya=eq.'+CAT+'&order=created_at.desc',
   {headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}})
-.then(function(r){return r.json()})
+.then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
 .then(function(d){
-  all=Array.isArray(d)?d:[];
+  if(!Array.isArray(d))throw new Error('bad data');
+  all=d;
   var u=new URLSearchParams(location.search), c=u.get('c'), g=u.get('g');
   if(c){sub=c;group=mainOf(c)}else if(g){group=g}
   render();
 })
-.catch(function(){document.getElementById('grid').innerHTML='<div class="msg" data-nosnippet>Məhsullar yüklənmədi. Səhifəni yeniləyin.</div>'});
+.catch(function(){
+  var gr=document.getElementById('grid');
+  if(gr.querySelector('.card'))return; // serverdən gələn məhsullar qalsın
+  gr.innerHTML='<div class="msg" data-nosnippet>Məhsullar yüklənmədi. Səhifəni yeniləyin.</div>';
+});
 
 function chip(label,count,attr,val,on){
   return '<button class="chip'+(on?' active':'')+'" '+attr+'="'+esc(val)+'">'+esc(label)+'<small>'+count+'</small></button>';
