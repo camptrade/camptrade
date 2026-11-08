@@ -112,7 +112,7 @@ function show(p){
   countView('products',p.id,p.views||0,function(n){var e=document.getElementById('viewsBadge');if(e)e.textContent='👁 '+n+' baxış'});
   api('kateqoriya=eq.'+p.kateqoriya+'&id=neq.'+p.id+'&alt_kateqoriya=eq.'+encodeURIComponent(sub)+'&order=created_at.desc&limit=4').then(function(r){
     if(!r||!r.length||!Array.isArray(r))return;
-    document.getElementById('rel').innerHTML='<h2>Oxşar məhsullar</h2><div class="rg">'+r.map(function(x){
+    document.getElementById('rel').innerHTML='<h2>Digər məhsullar</h2><div class="rg">'+r.map(function(x){
       var im=(x.sekiller||'').split(',')[0].trim()||'images/logo.jpeg';
       return '<a href="product.html?id='+encodeURIComponent(x.id)+'"><img src="'+esc(im)+'" onerror="this.src=\'images/logo.jpeg\'"><div>'+esc(x.ad)+'<b>'+esc(x.qiymet)+' AZN</b></div></a>'}).join('')+'</div>';
   });
