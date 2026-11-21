@@ -205,9 +205,12 @@ function showError(msg) {
 
 function loadPost() {
     var id = new URLSearchParams(location.search).get('id');
-    if (!id) { showError('Yazı tapılmadı'); return; }
-
-    get('blogs?id=eq.' + encodeURIComponent(id))
+    var m = location.pathname.match(/^\/blog\/([^\/]+)\/?$/);
+    var slug = '';
+    if (m) { try { slug = decodeURIComponent(m[1]); } catch (e) { slug = m[1]; } }
+    if (!id && !slug) { showError('Yazı tapılmadı'); return; }
+ 
+    get(slug ? 'blogs?slug=eq.' + encodeURIComponent(slug) : 'blogs?id=eq.' + encodeURIComponent(id))
         .then(function (d) {
             if (!Array.isArray(d) || !d[0]) { showError('Yazı tapılmadı'); return; }
             try { show(d[0]); }
@@ -291,7 +294,7 @@ function loadRelated(currentId) {
                 var img = b.sekil
                     ? '<img src="' + esc(b.sekil) + '" alt="" onerror="this.style.display=\'none\'">'
                     : '<div class="rph">📰</div>';
-                return '<a href="blog-post.html?id=' + encodeURIComponent(b.id) + '" class="rcard">' + img +
+                return '<a href="' + (b.slug ? '/blog/' + encodeURIComponent(b.slug) : 'blog-post.html?id=' + encodeURIComponent(b.id)) + '" class="rcard">' + img +
                     '<div class="rinfo"><div class="rtag">' + esc(b.kateqoriya) + '</div>' +
                     '<h4>' + esc(b.baslig) + '</h4><p>⏱️ ' + esc(fmtRead(b.oxuma_muddeti)) + '</p></div></a>';
             }).join('');

@@ -1085,7 +1085,25 @@
 
     // ============ BLOG ============
 
-    async function addBlog() {
+    function makeSlug(t) {
+    var m = {'ə':'e','Ə':'e','ı':'i','I':'i','İ':'i','ö':'o','Ö':'o','ü':'u','Ü':'u','ş':'s','Ş':'s','ç':'c','Ç':'c','ğ':'g','Ğ':'g'};
+    return String(t).replace(/[əƏıIİöÖüÜşŞçÇğĞ]/g, function (c) { return m[c]; })
+        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+    }
+ 
+    async function uniqueSlug(title) {
+    var base = makeSlug(title) || 'yazi', s = base, n = 2;
+    while (true) {
+        var r = await fetch(SUPABASE_URL + '/rest/v1/blogs?select=id&slug=eq.' + encodeURIComponent(s), {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + AUTH_TOKEN }
+        });
+        var d = await r.json();
+        if (!d.length) return s;
+        s = base + '-' + n++;
+        }
+    }
+
+        async function addBlog() {
         var title = document.getElementById('blogTitle').value.trim();
         var category = document.getElementById('blogCategory').value;
         var readTime = document.getElementById('blogReadTime').value.trim();
@@ -1116,6 +1134,7 @@
                 finalImageUrl = photoUrl;
             }
 
+            var slug = await uniqueSlug(title);
             var res = await fetch(SUPABASE_URL + '/rest/v1/blogs', {
                 method: 'POST',
                 headers: {
@@ -1126,6 +1145,7 @@
                 },
                 body: JSON.stringify({
                     baslig: title,
+                    slug: slug,
                     metn: content,
                     sekil: finalImageUrl,
                     mehsul_kateqoriya: getPick('blogProdCat'),

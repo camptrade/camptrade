@@ -12,18 +12,18 @@ export const config = { path: "/sitemap.xml" };
 const xml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c]));
 
 // Supabase bir sorğuda ən çoxu 1000 sətir qaytarır, ona görə hissə-hissə oxuyuruq
-async function ids(table) {
+async function ids(table, cols) {
   const out = [];
   let ok = true;
   for (let from = 0; from < 20000; from += 1000) {
     try {
-      const r = await fetch(SB + "/rest/v1/" + table + "?select=id&order=created_at.desc", {
+      const r = await fetch(SB + "/rest/v1/" + table + "?select=" + (cols || "id") + "&order=created_at.desc", {
         headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Range-Unit": "items", Range: from + "-" + (from + 999) },
       });
       if (!r.ok) { ok = false; break; }
       const d = await r.json();
       if (!Array.isArray(d)) { ok = false; break; }
-      d.forEach((x) => out.push(x.id));
+      d.forEach((x) => out.push(x));
       if (d.length < 1000) break;
     } catch (e) {
       ok = false;
@@ -34,11 +34,11 @@ async function ids(table) {
 }
 
 export default async () => {
-  const [prods, blogs] = await Promise.all([ids("products"), ids("blogs")]);
+  const [prods, blogs] = await Promise.all([ids("products"), ids("blogs", "id,slug")]);
 
   const urls = ["/", "/satis", "/kiraye", "/blog", "/sat", "/elaqe"].map((p) => SITE + p);
-  prods.list.forEach((id) => urls.push(SITE + "/product.html?id=" + encodeURIComponent(id)));
-  blogs.list.forEach((id) => urls.push(SITE + "/blog-post.html?id=" + encodeURIComponent(id)));
+  prods.list.forEach((x) => urls.push(SITE + "/product.html?id=" + encodeURIComponent(x.id)));
+  blogs.list.forEach((x) => urls.push(x.slug ? SITE + "/blog/" + encodeURIComponent(x.slug) : SITE + "/blog-post.html?id=" + encodeURIComponent(x.id)));
 
   const body =
     '<?xml version="1.0" encoding="UTF-8"?>\n' +

@@ -298,6 +298,8 @@ function loadBlogs() {
     });
 }
 
+function postUrl(b) { return b.slug ? '/blog/' + encodeURIComponent(b.slug) : 'blog-post.html?id=' + b.id; }
+
 function renderBlogs(blogs) {
     var grid = document.getElementById('blogGrid');
     var empty = document.getElementById('emptyState');
@@ -332,11 +334,11 @@ function renderBlogs(blogs) {
                     '<span>📅 ' + date + '</span>' +
                     '<span>⏱️ ' + (/^\d+$/.test(String(b.oxuma_muddeti).trim()) ? b.oxuma_muddeti + ' dəq oxu' : b.oxuma_muddeti) + '</span>' +
                 '</div>' +
-                '<a href="blog-post.html?id=' + b.id + '" class="read-more">Davam et →</a>' +
+                '<a href="' + postUrl(b) + '" class="read-more">Davam et →</a>' +
             '</div>';
 
             card.addEventListener('click', function() {
-               window.location.href = 'blog-post.html?id=' + b.id;
+               window.location.href = postUrl(b);
            });
 
         grid.appendChild(card);
@@ -358,7 +360,7 @@ function filterBlogs(category, btn) {
 
 function openPost(index) {
     var b = allBlogs[index];
-    window.location.href = 'blog-post.html?id=' + b.id;
+    window.location.href = postUrl(b);
 }
 
 function closePost() {

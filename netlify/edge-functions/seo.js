@@ -16,6 +16,7 @@ export const config = {
     "/satis", "/satis.html",
     "/kiraye", "/kiraye.html",
     "/blog", "/blog.html",
+    "/blog/*",
   ],
 };
 
@@ -140,19 +141,24 @@ function blogCards(list) {
     return (
       '<div class="blog-card">' + img + '<div class="blog-info"><span class="blog-tag">' + esc(b.kateqoriya) + "</span>" +
       "<h3>" + esc(b.baslig) + '</h3><div class="blog-meta"><span>📅 ' + fmtDate(b.created_at) + "</span><span>⏱️ " + esc(b.oxuma_muddeti) + "</span></div>" +
-      '<a href="blog-post.html?id=' + encodeURIComponent(b.id) + '" class="read-more">Davam et →</a></div></div>'
+      '<a href="' + (b.slug ? "/blog/" + encodeURIComponent(b.slug) : "blog-post.html?id=" + encodeURIComponent(b.id)) + '" class="read-more">Davam et →</a></div></div>'
     );
   }).join("");
 }
 
 /* ---------- əsas hissə ---------- */
 export default async (request, context) => {
-  const response = await context.next();
-  const type = response.headers.get("content-type") || "";
-  if (response.status !== 200 || !type.includes("text/html")) return response;
-
   const url = new URL(request.url);
   const path = url.pathname.replace(/\.html$/, "").replace(/\/+$/, "");
+  const slugMatch = path.match(/^\/blog\/([^\/]+)$/);
+  let slug = "";
+  if (slugMatch) {
+    try { slug = decodeURIComponent(slugMatch[1]); } catch (e) { slug = slugMatch[1]; }
+  }
+  const response = slugMatch ? await context.rewrite("/blog-post.html") : await context.next();
+  const type = response.headers.get("content-type") || "";
+  if (response.status !== 200 || !type.includes("text/html")) return response;
+ 
   const id = url.searchParams.get("id");
   const filtered = url.searchParams.has("g") || url.searchParams.has("c");
   const original = await response.text();
@@ -160,13 +166,13 @@ export default async (request, context) => {
   let status = 200;
 
   try {
-    if (path === "/blog-post" && id) {
-      const d = await sb("blogs?id=eq." + encodeURIComponent(id));
+    if ((path === "/blog-post" && id) || slug) {
+      const d = await sb(slug ? "blogs?slug=eq." + encodeURIComponent(slug) : "blogs?id=eq." + encodeURIComponent(id));
       if (d && !d.length) {
         status = 404;
       } else if (d && d[0]) {
         const b = d[0];
-        const canon = SITE + "/blog-post.html?id=" + encodeURIComponent(b.id);
+        const canon = b.slug ? SITE + "/blog/" + encodeURIComponent(b.slug) : SITE + "/blog-post.html?id=" + encodeURIComponent(b.id);
         const desc = cut(stripTags(b.metn) || b.baslig + " - CampTrade blogu", 155);
         const ld = {
           "@context": "https://schema.org",
@@ -244,6 +250,8 @@ export default async (request, context) => {
     status = 200;
   }
 
+  if (slug && !html.includes("<base ")) html = html.replace(/<head>/i, '<head><base href="/">');
+ 
   const headers = new Headers(response.headers);
   headers.delete("content-length");
   return new Response(html, { status, headers });
