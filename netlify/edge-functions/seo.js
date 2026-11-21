@@ -172,6 +172,7 @@ export default async (request, context) => {
         status = 404;
       } else if (d && d[0]) {
         const b = d[0];
+        if (!slug && b.slug) return Response.redirect(SITE + "/blog/" + encodeURIComponent(b.slug), 301);
         const canon = b.slug ? SITE + "/blog/" + encodeURIComponent(b.slug) : SITE + "/blog-post.html?id=" + encodeURIComponent(b.id);
         const desc = cut(stripTags(b.metn) || b.baslig + " - CampTrade blogu", 155);
         const ld = {
